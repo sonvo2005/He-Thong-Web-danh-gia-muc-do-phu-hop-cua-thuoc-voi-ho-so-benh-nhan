@@ -1,0 +1,144 @@
+@model HoSoBenhNhan
+@{
+    ViewData["Title"] = "Chi Tiết Bệnh Nhân";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center">
+        <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+        <h4 class="fw-bold text-primary mb-0">
+            <i class="fas fa-hospital-user me-2"></i>@Model.HoTen
+        </h4>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.MaBenhNhan" class="btn btn-warning">
+            <i class="fas fa-edit me-1"></i>Chỉnh sửa
+        </a>
+        <a asp-controller="DanhGia" asp-action="Create" asp-route-maBenhNhan="@Model.MaBenhNhan" class="btn btn-primary">
+            <i class="fas fa-clipboard-check me-1"></i>Đánh giá thuốc
+        </a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <!-- Thông tin cá nhân -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-3">
+                <h6 class="mb-0"><i class="fas fa-id-card me-2"></i>Thông tin cá nhân</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-borderless mb-0">
+                    <tr>
+                        <td class="text-muted fw-semibold" style="width:40%">Mã ĐĐ:</td>
+                        <td><span class="badge bg-secondary">@Model.MaDinhDanhBenhNhan</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Họ tên:</td>
+                        <td><strong>@Model.HoTen</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Giới tính:</td>
+                        <td>@Model.GioiTinh</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Ngày sinh:</td>
+                        <td>@Model.NgaySinh?.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Địa chỉ:</td>
+                        <td>@Model.DiaChi</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Tiếp nhận:</td>
+                        <td>@Model.NgayTiepNhan.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Người tạo:</td>
+                        <td>@Model.NguoiTao?.HoTen</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bệnh nền & dị ứng -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-warning text-dark py-3">
+                <h6 class="mb-0"><i class="fas fa-disease me-2"></i>Bệnh nền (@Model.BenhNens.Count)</h6>
+            </div>
+            <div class="card-body">
+                @if (!Model.BenhNens.Any())
+                {
+                    <p class="text-muted mb-0">Không có bệnh nền</p>
+                }
+                @foreach (var bn in Model.BenhNens)
+                {
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <span class="fw-semibold">@bn.TenBenhNen</span>
+                            @if (bn.NgayChanDoan.HasValue)
+                            {
+                                <br /><small class="text-muted">Chẩn đoán: @bn.NgayChanDoan.Value.ToString("dd/MM/yyyy")</small>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger text-white py-3">
+                <h6 class="mb-0"><i class="fas fa-allergies me-2"></i>Dị ứng hoạt chất (@Model.DiUngThuocs.Count)</h6>
+            </div>
+            <div class="card-body">
+                @if (!Model.DiUngThuocs.Any())
+                {
+                    <p class="text-muted mb-0">Không có dị ứng</p>
+                }
+                @foreach (var du in Model.DiUngThuocs)
+                {
+                    var badgeColor = du.MucDoDiUng == "Nghiêm trọng" ? "bg-danger" :
+                                    du.MucDoDiUng == "Nặng" ? "bg-orange" :
+                                    du.MucDoDiUng == "Trung bình" ? "bg-warning text-dark" : "bg-info";
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>@du.HoatChat?.TenHoatChat</span>
+                        <span class="badge @badgeColor">@du.MucDoDiUng</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Lịch sử đánh giá -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-info text-white py-3 d-flex justify-content-between">
+                <h6 class="mb-0"><i class="fas fa-history me-2"></i>Lịch sử đánh giá (@Model.DanhGias.Count)</h6>
+                <a asp-controller="DanhGia" asp-action="Create" asp-route-maBenhNhan="@Model.MaBenhNhan"
+                   class="btn btn-sm btn-light text-info">+</a>
+            </div>
+            <div class="card-body p-0">
+                @if (!Model.DanhGias.Any())
+                {
+                    <p class="text-muted p-3 mb-0">Chưa có đánh giá nào</p>
+                }
+                @foreach (var dg in Model.DanhGias.OrderByDescending(d => d.NgayDanhGia))
+                {
+                    decimal tyle = dg.TyLePhuHop ?? 0;
+                    string badgeClass = tyle >= 80 ? "bg-success" : tyle >= 50 ? "bg-warning" : "bg-danger";
+                    <div class="border-bottom p-3">
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">@dg.NgayDanhGia.ToString("dd/MM/yyyy HH:mm")</small>
+                            <span class="badge @badgeClass">@tyle%</span>
+                        </div>
+                        <small class="text-muted">@dg.NguoiDanhGia?.HoTen | @dg.ChiTietDanhGias.Count thuốc</small>
+                        <br />
+                        <a href="/DanhGia/KetQua/@dg.MaDanhGia" class="btn btn-xs btn-link p-0 small">Xem kết quả →</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,126 @@
+@model IEnumerable<Thuoc>
+@{
+    ViewData["Title"] = "Danh Mục Thuốc";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-primary mb-0">
+        <i class="fas fa-capsules me-2"></i>Danh Mục Thuốc
+    </h4>
+    @if (User.IsInRole("Admin") || User.IsInRole("Dược sĩ"))
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Thêm thuốc
+        </a>
+    }
+</div>
+
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-body py-3">
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="search" value="@ViewBag.Search"
+                   class="form-control" placeholder="Tìm theo tên thuốc, biệt dược..." />
+            <button type="submit" class="btn btn-primary px-4"><i class="fas fa-search me-1"></i>Tìm</button>
+            @if (!string.IsNullOrEmpty(ViewBag.Search?.ToString()))
+            {
+                <a asp-action="Index" class="btn btn-outline-secondary">Xóa lọc</a>
+            }
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3">
+        <span class="text-muted small">Tổng: <strong>@ViewBag.Total</strong> loại thuốc</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Tên thuốc</th>
+                    <th>Biệt dược</th>
+                    <th>Dạng bào chế</th>
+                    <th>Hoạt chất</th>
+                    <th>Tình trạng</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">
+                        <i class="fas fa-pills fa-2x mb-2 d-block opacity-25"></i>
+                        Không có thuốc nào
+                    </td></tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@item.TenThuoc</td>
+                        <td class="text-muted">@item.TenBietDuoc</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.DangBaoChe))
+                            {
+                                <span class="badge bg-light text-dark border">@item.DangBaoChe</span>
+                            }
+                        </td>
+                        <td>
+                            @foreach (var thc in item.ThuocHoatChats.Take(3))
+                            {
+                                <span class="badge bg-info text-dark me-1">@thc.HoatChat?.TenHoatChat</span>
+                            }
+                            @if (item.ThuocHoatChats.Count > 3)
+                            {
+                                <span class="badge bg-secondary">+@(item.ThuocHoatChats.Count - 3)</span>
+                            }
+                        </td>
+                        <td>
+                            @{
+                                bool active = item.TinhTrangThuoc == "Hoạt động";
+                            }
+                            <span class="badge @(active ? "bg-success" : "bg-secondary")">@item.TinhTrangThuoc</span>
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Details" asp-route-id="@item.MaThuoc"
+                               class="btn btn-sm btn-outline-info" title="Chi tiết">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Dược sĩ"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.MaThuoc"
+                                   class="btn btn-sm btn-outline-warning" title="Sửa">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <form asp-action="Delete" asp-route-id="@item.MaThuoc" method="post" class="d-inline"
+                                      onsubmit="return confirm('Xác nhận xóa thuốc này?')">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if ((int)ViewBag.TotalPages > 1)
+    {
+        <div class="card-footer bg-white d-flex justify-content-center">
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == (int)ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-search="@ViewBag.Search">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>

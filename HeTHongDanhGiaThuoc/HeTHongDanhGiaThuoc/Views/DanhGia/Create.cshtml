@@ -1,0 +1,193 @@
+@{
+    ViewData["Title"] = "Tạo Phiên Đánh Giá";
+    var benhNhans = ViewBag.BenhNhans as List<HoSoBenhNhan>;
+    var thuocs = ViewBag.Thuocs as List<Thuoc>;
+    var benhNhanChon = ViewBag.BenhNhanChon as HoSoBenhNhan;
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="fw-bold text-primary mb-0">
+        <i class="fas fa-clipboard-check me-2"></i>Tạo Phiên Đánh Giá Thuốc
+    </h4>
+</div>
+
+<form asp-action="Create" method="post" id="frmDanhGia">
+    @Html.AntiForgeryToken()
+    <div class="row g-3">
+        <!-- Chọn bệnh nhân -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h6 class="mb-0"><i class="fas fa-user me-2"></i>Bước 1: Chọn bệnh nhân</h6>
+                </div>
+                <div class="card-body">
+                    <select name="maBenhNhan" id="selBenhNhan" class="form-select mb-3" required onchange="loadBenhNhan(this.value)">
+                        <option value="">-- Chọn bệnh nhân --</option>
+                        @if (benhNhans != null)
+                        {
+                            foreach (var bn in benhNhans)
+                            {
+                                bool selected = benhNhanChon?.MaBenhNhan == bn.MaBenhNhan;
+
+                                if (selected)
+                                {
+                                    <option value="@bn.MaBenhNhan" selected>
+                                        @bn.HoTen (@bn.MaDinhDanhBenhNhan)
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@bn.MaBenhNhan">
+                                        @bn.HoTen (@bn.MaDinhDanhBenhNhan)
+                                    </option>
+                                }
+                            }
+                        }
+                    </select>
+
+                    <div id="infoBenhNhan">
+                        @if (benhNhanChon != null)
+                        {
+                            <div class="alert alert-light border p-3">
+                                <strong>@benhNhanChon.HoTen</strong><br />
+                                <small class="text-muted">@benhNhanChon.GioiTinh | @benhNhanChon.NgaySinh?.ToString("dd/MM/yyyy")</small>
+
+                                @if (benhNhanChon.BenhNens.Any())
+                                {
+                                    <hr class="my-2" />
+                                    <p class="mb-1 fw-semibold text-warning"><i class="fas fa-disease me-1"></i>Bệnh nền:</p>
+                                    @foreach (var bn in benhNhanChon.BenhNens)
+                                    {
+                                        <span class="badge bg-warning text-dark me-1 mb-1">@bn.TenBenhNen</span>
+                                    }
+                                }
+
+                                @if (benhNhanChon.DiUngThuocs.Any())
+                                {
+                                    <hr class="my-2" />
+                                    <p class="mb-1 fw-semibold text-danger"><i class="fas fa-allergies me-1"></i>Dị ứng:</p>
+                                    @foreach (var du in benhNhanChon.DiUngThuocs)
+                                    {
+                                        <span class="badge bg-danger me-1 mb-1">@du.HoatChat?.TenHoatChat</span>
+                                    }
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted py-3" id="placeholderBenhNhan">
+                                <i class="fas fa-user-circle fa-3x mb-2 opacity-25"></i>
+                                <p>Chọn bệnh nhân để xem thông tin</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ghi chú -->
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-header bg-light py-3">
+                    <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Ghi chú phiên đánh giá</h6>
+                </div>
+                <div class="card-body">
+                    <textarea name="ghiChu" class="form-control" rows="3" placeholder="Ghi chú thêm..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chọn thuốc -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fas fa-pills me-2"></i>Bước 2: Chọn thuốc cần đánh giá</h6>
+                    <button type="button" class="btn btn-sm btn-light text-success" onclick="themDong()">
+                        <i class="fas fa-plus me-1"></i>Thêm thuốc
+                    </button>
+                </div>
+                <div class="card-body" id="dsThuoc">
+                    <!-- Row thuốc ban đầu -->
+                    <div class="thuoc-row border rounded p-3 mb-2 bg-light">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-7">
+                                <label class="form-label small fw-semibold">Thuốc</label>
+                                <select name="maThuocs" class="form-select">
+                                    <option value="0">-- Chọn thuốc --</option>
+                                    @if (thuocs != null)
+                                    {
+                                        foreach (var t in thuocs)
+                                        {
+                                            <option value="@t.MaThuoc">@t.TenThuoc (@t.DangBaoChe)</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label small fw-semibold">Liều dùng chỉ định</label>
+                                <input type="text" name="lieuDungs" class="form-control" placeholder="VD: 500mg 2 lần/ngày" />
+                            </div>
+                            <div class="col-1 pt-4">
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="xoaDong(this)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 text-end">
+                <button type="submit" class="btn btn-primary btn-lg px-5">
+                    <i class="fas fa-magic me-2"></i>Chạy đánh giá
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+function themDong() {
+    const container = document.getElementById('dsThuoc');
+    const thuocOptions = `@if (thuocs != null) { foreach (var t in thuocs) { @("<option value='" + t.MaThuoc + "'>" + t.TenThuoc + " (" + t.DangBaoChe + ")</option>") } }`;
+    const div = document.createElement('div');
+    div.className = 'thuoc-row border rounded p-3 mb-2 bg-light';
+    div.innerHTML = `
+        <div class="row g-2 align-items-center">
+            <div class="col-7">
+                <label class="form-label small fw-semibold">Thuốc</label>
+                <select name="maThuocs" class="form-select">
+                    <option value="0">-- Chọn thuốc --</option>
+                    ${getAllThuocOptions()}
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label small fw-semibold">Liều dùng</label>
+                <input type="text" name="lieuDungs" class="form-control" placeholder="VD: 500mg 2 lần/ngày" />
+            </div>
+            <div class="col-1 pt-4">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="xoaDong(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>`;
+    container.appendChild(div);
+}
+
+function getAllThuocOptions() {
+    const firstSelect = document.querySelector('select[name="maThuocs"]');
+    if (firstSelect) return firstSelect.innerHTML;
+    return '';
+}
+
+function xoaDong(btn) {
+    const rows = document.querySelectorAll('.thuoc-row');
+    if (rows.length > 1) btn.closest('.thuoc-row').remove();
+}
+
+function loadBenhNhan(id) {
+    if (!id) return;
+    window.location.href = '/DanhGia/Create?maBenhNhan=' + id;
+}
+</script>
+}

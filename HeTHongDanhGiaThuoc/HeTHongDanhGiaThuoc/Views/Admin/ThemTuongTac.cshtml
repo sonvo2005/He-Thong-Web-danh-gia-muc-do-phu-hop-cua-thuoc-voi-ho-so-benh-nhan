@@ -1,0 +1,82 @@
+@model TuongTacThuoc
+@{
+    ViewData["Title"] = "Thêm Tương Tác Thuốc";
+    var thuocs = ViewBag.Thuocs as List<Thuoc>;
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="TuongTacThuoc" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="fw-bold text-primary mb-0"><i class="fas fa-exchange-alt me-2"></i>Thêm Tương Tác Thuốc</h4>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark py-3">
+                <h6 class="mb-0">Thông tin tương tác</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="ThemTuongTac" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="alert alert-danger"
+                         style="display:@(ViewData.ModelState.ErrorCount > 0 ? "block" : "none")"></div>
+
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label class="form-label fw-semibold">Thuốc A</label>
+                            <select asp-for="MaThuoc_A" class="form-select" required>
+                                <option value="0">-- Chọn thuốc A --</option>
+                                @if (thuocs != null)
+                                {
+                                    foreach (var t in thuocs)
+                                    {
+                                        <option value="@t.MaThuoc">@t.TenThuoc</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end pb-3 justify-content-center">
+                            <span class="fs-4 text-muted"><i class="fas fa-exchange-alt"></i></span>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label class="form-label fw-semibold">Thuốc B</label>
+                            <select asp-for="MaThuoc_B" class="form-select" required>
+                                <option value="0">-- Chọn thuốc B --</option>
+                                @if (thuocs != null)
+                                {
+                                    foreach (var t in thuocs)
+                                    {
+                                        <option value="@t.MaThuoc">@t.TenThuoc</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MucDoNghiemTrong" class="form-label fw-semibold"></label>
+                        <select asp-for="MucDoNghiemTrong" class="form-select">
+                            <option value="Thấp">Thấp - Theo dõi thông thường</option>
+                            <option value="Trung bình">Trung bình - Cần theo dõi chặt</option>
+                            <option value="Cao">Cao - Cân nhắc thay thuốc</option>
+                            <option value="Nghiêm trọng">Nghiêm trọng - Chống chỉ định phối hợp</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MoTaTuongTac" class="form-label fw-semibold"></label>
+                        <textarea asp-for="MoTaTuongTac" class="form-control" rows="4"
+                                  placeholder="Mô tả chi tiết về cơ chế và hậu quả của tương tác..."></textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-warning px-4">
+                            <i class="fas fa-save me-2"></i>Lưu tương tác
+                        </button>
+                        <a asp-action="TuongTacThuoc" class="btn btn-outline-secondary">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

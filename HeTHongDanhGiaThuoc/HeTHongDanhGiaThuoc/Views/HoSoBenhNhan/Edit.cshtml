@@ -1,0 +1,251 @@
+@model HoSoBenhNhan
+@{
+    ViewData["Title"] = "Chỉnh Sửa Hồ Sơ";
+    var hoatChats = ViewBag.HoatChats as List<HoatChat>;
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Details" asp-route-id="@Model.MaBenhNhan" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="fw-bold text-primary mb-0"><i class="fas fa-edit me-2"></i>Chỉnh Sửa: @Model.HoTen</h4>
+</div>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="MaBenhNhan" />
+    <div class="row g-3">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h6 class="mb-0"><i class="fas fa-id-card me-2"></i>Thông tin cơ bản</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="MaDinhDanhBenhNhan" class="form-label fw-semibold"></label>
+                        <input asp-for="MaDinhDanhBenhNhan" class="form-control" />
+                        <span asp-validation-for="MaDinhDanhBenhNhan" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="HoTen" class="form-label fw-semibold"></label>
+                        <input asp-for="HoTen" class="form-control" />
+                        <span asp-validation-for="HoTen" class="text-danger small"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label asp-for="GioiTinh" class="form-label fw-semibold"></label>
+                            <select asp-for="GioiTinh" class="form-select">
+                                <option value="">-- Chọn --</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label asp-for="NgaySinh" class="form-label fw-semibold"></label>
+                            <input asp-for="NgaySinh" class="form-control" type="date" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="DiaChi" class="form-label fw-semibold"></label>
+                        <textarea asp-for="DiaChi" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <!-- Bệnh nền -->
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-header bg-warning text-dark py-3 d-flex justify-content-between">
+                    <h6 class="mb-0"><i class="fas fa-disease me-2"></i>Bệnh nền</h6>
+                    <button type="button" class="btn btn-sm btn-dark" onclick="themBenhNen()">
+                        <i class="fas fa-plus"></i> Thêm
+                    </button>
+                </div>
+                <div class="card-body" id="dsBenhNen">
+                    @if (!Model.BenhNens.Any())
+                    {
+                        <p class="text-muted small" id="emptyBN">Chưa có bệnh nền nào</p>
+                    }
+                    @foreach (var bn in Model.BenhNens)
+                    {
+                        <div class="border rounded p-2 mb-2 bg-light">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-6">
+                                    <input type="text" name="tenBenhNens" value="@bn.TenBenhNen"
+                                           class="form-control form-control-sm" placeholder="Tên bệnh nền" />
+                                </div>
+                                <div class="col-5">
+                                    <input type="date" name="ngayChanDoans"
+                                           value="@bn.NgayChanDoan?.ToString("yyyy-MM-dd")"
+                                           class="form-control form-control-sm" />
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('div.border').remove()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Dị ứng -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-danger text-white py-3 d-flex justify-content-between">
+                    <h6 class="mb-0"><i class="fas fa-allergies me-2"></i>Dị ứng hoạt chất</h6>
+                    <button type="button" class="btn btn-sm btn-light" onclick="themDiUng()">
+                        <i class="fas fa-plus"></i> Thêm
+                    </button>
+                </div>
+                <div class="card-body" id="dsDiUng">
+                    @if (!Model.DiUngThuocs.Any())
+                    {
+                        <p class="text-muted small" id="emptyDU">Chưa có dị ứng nào</p>
+                    }
+                    @foreach (var du in Model.DiUngThuocs)
+                    {
+                        <div class="border rounded p-2 mb-2 bg-light">
+                            <div class="row g-2 align-items-center">
+                                <div class="col-6">
+                                    <select name="maHoatChats" class="form-select form-select-sm">
+                                        <option value="0">-- Chọn hoạt chất --</option>
+                                        @if (hoatChats != null)
+                                        {
+                                            foreach (var hc in hoatChats)
+                                            {
+                                                    @if (hc.MaHoatChat == du.MaHoatChat)
+                                                    {
+                                                        <option value="@hc.MaHoatChat" selected>
+                                                            @hc.TenHoatChat
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@hc.MaHoatChat">
+                                                            @hc.TenHoatChat
+                                                        </option>
+                                                    }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-5">
+                                    <select name="mucDoDiUngs" class="form-select form-select-sm">
+                                            @if (du.MucDoDiUng == "Nhẹ")
+                                            {
+                                                <option selected>Nhẹ</option>
+                                            }
+                                            else
+                                            {
+                                                <option>Nhẹ</option>
+                                            }
+                                            @if (du.MucDoDiUng == "Trung bình")
+                                            {
+                                                <option selected>Trung bình</option>
+                                            }
+                                            else
+                                            {
+                                                <option>Trung bình</option>
+                                            }
+                                            @if (du.MucDoDiUng == "Nặng")
+                                            {
+                                                <option selected>Nặng</option>
+                                            }
+                                            else
+                                            {
+                                                <option>Nặng</option>
+                                            }
+                                            @if (du.MucDoDiUng == "Nghiêm trọng")
+                                            {
+                                                <option selected>Nghiêm trọng</option>
+                                            }
+                                            else
+                                            {
+                                                <option>Nghiêm trọng</option>
+                                            }
+                                    </select>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('div.border').remove()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3 d-flex gap-2">
+        <button type="submit" class="btn btn-warning px-4">
+            <i class="fas fa-save me-2"></i>Lưu thay đổi
+        </button>
+        <a asp-action="Details" asp-route-id="@Model.MaBenhNhan" class="btn btn-outline-secondary">Hủy</a>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+const hoatChatOptions = `@if (hoatChats != null) {
+    foreach (var hc in hoatChats)
+    { @("<option value='" + hc.MaHoatChat + "'>" + hc.TenHoatChat + "</option>") }
+}`;
+
+function themBenhNen() {
+    const empty = document.getElementById('emptyBN');
+    if (empty) empty.style.display = 'none';
+    const container = document.getElementById('dsBenhNen');
+    const div = document.createElement('div');
+    div.className = 'border rounded p-2 mb-2 bg-light';
+    div.innerHTML = `
+        <div class="row g-2 align-items-center">
+            <div class="col-6">
+                <input type="text" name="tenBenhNens" class="form-control form-control-sm" placeholder="Tên bệnh nền" />
+            </div>
+            <div class="col-5">
+                <input type="date" name="ngayChanDoans" class="form-control form-control-sm" />
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('div.border').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>`;
+    container.appendChild(div);
+}
+
+function themDiUng() {
+    const empty = document.getElementById('emptyDU');
+    if (empty) empty.style.display = 'none';
+    const container = document.getElementById('dsDiUng');
+    const div = document.createElement('div');
+    div.className = 'border rounded p-2 mb-2 bg-light';
+    div.innerHTML = `
+        <div class="row g-2 align-items-center">
+            <div class="col-6">
+                <select name="maHoatChats" class="form-select form-select-sm">
+                    <option value="0">-- Chọn hoạt chất --</option>
+                    ${hoatChatOptions}
+                </select>
+            </div>
+            <div class="col-5">
+                <select name="mucDoDiUngs" class="form-select form-select-sm">
+                    <option>Nhẹ</option>
+                    <option>Trung bình</option>
+                    <option>Nặng</option>
+                    <option>Nghiêm trọng</option>
+                </select>
+            </div>
+            <div class="col-1">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.closest('div.border').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>`;
+    container.appendChild(div);
+}
+</script>
+}

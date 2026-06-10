@@ -1,0 +1,145 @@
+@{
+    ViewData["Title"] = "BM02: Danh mục đặc tính thuốc";
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-light border-0 py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold text-secondary">
+            <i class="bi bi-sliders me-2"></i>Form BM02: Danh mục Đặc tính Thuốc
+        </h5>
+        <div class="input-group" style="width: 350px;">
+            <input type="text" class="form-control form-control-sm" placeholder="Tìm kiếm thuốc trong catalogue...">
+            <button class="btn btn-sm btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="p-3 bg-light rounded border mb-4">
+            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Định nghĩa dược tính</h6>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold text-muted">Tên biệt dược</label>
+                    <input type="text" class="form-control form-control-sm" value="Metformin" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold text-muted">Hoạt chất</label>
+                    <input type="text" class="form-control form-control-sm" value="Metformin Hydrochloride" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold text-muted">Dạng bào chế</label>
+                    <select class="form-select form-select-sm">
+                        <option>Viên nén</option>
+                        <option>Viên sủi</option>
+                        <option>Siro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="p-3 bg-light rounded border h-100">
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                        <h6 class="fw-bold text-primary mb-0">Chống chỉ định (Contraindications)</h6>
+                        <button class="btn btn-sm btn-primary py-0" style="font-size:0.75rem;" type="button">+ Thêm bệnh
+                            lý</button>
+                        </div>
+                        <div class="mb-3">
+                            <select class="form-select form-select-sm mb-2">
+                                <option>-- Chọn tình trạng bệnh lý --</option>
+                                <option selected>Suy thận</option>
+                                <option>Suy gan</option>
+                                <option>Tiểu đường Type 2</option>
+                                <option>Cao huyết áp</option>
+                            </select>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered bg-white text-center small mb-0">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th>Tình trạng bệnh lý</th>
+                                        <th>Mức độ nghiêm trọng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Suy thận</td>
+                                        <td><span class="text-danger fw-bold">Tuyệt đối</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Suy gan</td>
+                                        <td><span class="text-warning fw-bold">Thận trọng</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7 d-flex flex-column gap-4">
+                    <div class="p-3 bg-light rounded border">
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                            <h6 class="fw-bold text-primary mb-0">Tương tác thuốc (Drug-Drug Interactions)</h6>
+                            <button class="btn btn-sm btn-primary py-0" style="font-size:0.75rem;" type="button">+ Thêm
+                                thuốc tương tác</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered bg-white small text-center mb-0">
+                                    <thead class="table-secondary">
+                                        <tr>
+                                            <th>Tên hoạt chất tương tác</th>
+                                            <th>Cơ chế tương tác</th>
+                                            <th>Mức độ tương tác</th>
+                                            <th>Khuyến cáo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Thuốc X</td>
+                                            <td>Ức chế thải trừ bài tiết</td>
+                                            <td><span class="badge bg-danger">Nghiêm trọng</span></td>
+                                            <td>Tránh phối hợp</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Thuốc Y</td>
+                                            <td>Tăng độc tính trên gan</td>
+                                            <td><span class="badge bg-warning text-dark">Trung bình</span></td>
+                                            <td>Theo dõi lâm sàng</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-light rounded border">
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Giới hạn dựa trên chỉ số sinh học</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small text-muted mb-1">Creatinine giới hạn tối đa (mg/dL)</label>
+                                    <input type="number" class="form-control form-control-sm" value="1.5">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small text-muted mb-1">ALT giới hạn tối đa (U/L)</label>
+                                    <input type="number" class="form-control form-control-sm" value="10">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small text-muted mb-1">Huyết áp giới hạn tối thiểu (mmHg)</label>
+                                    <input type="text" class="form-control form-control-sm" value="90/60">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small text-muted mb-1">Đường huyết giới hạn tối thiểu
+                                        (mmol/L)</label>
+                                        <input type="number" class="form-control form-control-sm" value="4.0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top p-3 d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-3"><i class="bi bi-arrow-left"></i> Quay lại hồ sơ</a>
+                    <button class="btn btn-success px-4" type="button">Lưu thay đổi</button>
+                    <button class="btn btn-outline-danger px-3" type="button">Hủy bỏ</button>
+                    <a asp-action="KetQuaDanhGia" class="btn btn-primary px-4">Xem kết quả đánh giá <i
+                        class="bi bi-calculator ms-1"></i></a>
+                    </div>
+                </div>

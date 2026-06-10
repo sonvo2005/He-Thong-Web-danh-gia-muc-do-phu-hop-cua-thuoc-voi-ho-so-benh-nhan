@@ -1,0 +1,76 @@
+@model IEnumerable<HoatChat>
+@{
+    ViewData["Title"] = "Quản Lý Hoạt Chất";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold text-primary mb-0">
+        <i class="fas fa-atom me-2"></i>Quản Lý Hoạt Chất
+    </h4>
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-info text-white py-3">
+                <h6 class="mb-0"><i class="fas fa-plus me-2"></i>Thêm hoạt chất mới</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="ThemHoatChat" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="input-group">
+                        <input type="text" name="tenHoatChat" class="form-control"
+                               placeholder="Tên hoạt chất (VD: Paracetamol)" required />
+                        <button type="submit" class="btn btn-info text-white">
+                            <i class="fas fa-plus me-1"></i>Thêm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h6 class="mb-0 fw-bold">
+                    <i class="fas fa-list me-2 text-info"></i>
+                    Danh sách hoạt chất (@Model.Count() hoạt chất)
+                </h6>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Tên hoạt chất</th>
+                            <th class="text-center">Số thuốc chứa</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-muted">@item.MaHoatChat</td>
+                                <td class="fw-semibold">@item.TenHoatChat</td>
+                                <td class="text-center">
+                                    <span class="badge bg-light text-dark border">@item.ThuocHoatChats.Count</span>
+                                </td>
+                                <td class="text-center">
+                                    <form asp-action="XoaHoatChat" asp-route-id="@item.MaHoatChat" method="post"
+                                          class="d-inline" onsubmit="return confirm('Xóa hoạt chất này? Thao tác có thể ảnh hưởng đến thuốc liên quan.')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

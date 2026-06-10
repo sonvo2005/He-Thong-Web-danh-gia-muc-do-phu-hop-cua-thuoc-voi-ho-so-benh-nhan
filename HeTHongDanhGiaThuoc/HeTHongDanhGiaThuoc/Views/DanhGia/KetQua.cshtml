@@ -1,0 +1,203 @@
+@model DanhGia
+@{
+    ViewData["Title"] = "Kết Quả Đánh Giá";
+    decimal tyle = Model.TyLePhuHop ?? 0;
+    string ringColor = tyle >= 80 ? "#22c55e" : tyle >= 50 ? "#f59e0b" : "#ef4444";
+    string statusText = tyle >= 80 ? "PHÙ HỢP" : tyle >= 50 ? "CẦN XEM XÉT" : "KHÔNG PHÙ HỢP";
+    string statusClass = tyle >= 80 ? "success" : tyle >= 50 ? "warning" : "danger";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center">
+        <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+        <h4 class="fw-bold text-primary mb-0">
+            <i class="fas fa-chart-pie me-2"></i>Kết Quả Đánh Giá
+        </h4>
+    </div>
+    <div class="d-flex gap-2">
+        <button onclick="window.print()" class="btn btn-outline-secondary">
+            <i class="fas fa-print me-1"></i>In kết quả
+        </button>
+        <a asp-controller="DanhGia" asp-action="Create" asp-route-maBenhNhan="@Model.MaBenhNhan"
+           class="btn btn-primary">
+            <i class="fas fa-redo me-1"></i>Đánh giá lại
+        </a>
+    </div>
+</div>
+
+<!-- Thông tin chung -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center py-4">
+                <div class="position-relative d-inline-block mb-3">
+                    <svg width="140" height="140" viewBox="0 0 140 140">
+                        <circle cx="70" cy="70" r="58" fill="none" stroke="#e5e7eb" stroke-width="14" />
+                        <circle cx="70" cy="70" r="58" fill="none" stroke="@ringColor" stroke-width="14"
+                                stroke-dasharray="@(Math.Round(tyle / 100m * 364.4m, 1))"            stroke-linecap="round"
+                                transform="rotate(-90 70 70)" />
+                    </svg>
+                    <div class="position-absolute top-50 start-50 translate-middle text-center">
+                        <div class="fw-bold" style="font-size:1.8rem; color:@ringColor">@tyle%</div>
+                        <div class="small text-muted">phù hợp</div>
+                    </div>
+                </div>
+                <span class="badge bg-@statusClass fs-6 px-3 py-2">@statusText</span>
+                <hr />
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="text-success fw-bold fs-4">@Model.ChiTietDanhGias.Count(c => c.CoPhuHopKhong)</div>
+                        <small class="text-muted">Thuốc phù hợp</small>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-danger fw-bold fs-4">@Model.ChiTietDanhGias.Count(c => !c.CoPhuHopKhong)</div>
+                        <small class="text-muted">Cần xem lại</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-primary text-white py-3">
+                <h6 class="mb-0"><i class="fas fa-user me-2"></i>Bệnh nhân</h6>
+            </div>
+            <div class="card-body">
+                <h6 class="fw-bold">@Model.HoSoBenhNhan?.HoTen</h6>
+                <p class="text-muted mb-1">
+                    <i class="fas fa-id-card me-1"></i>@Model.HoSoBenhNhan?.MaDinhDanhBenhNhan
+                </p>
+                <p class="text-muted mb-1">
+                    <i class="fas fa-venus-mars me-1"></i>@Model.HoSoBenhNhan?.GioiTinh |
+                    <i class="fas fa-birthday-cake me-1 ms-1"></i>@Model.HoSoBenhNhan?.NgaySinh?.ToString("dd/MM/yyyy")
+                </p>
+
+                @if (Model.HoSoBenhNhan?.BenhNens.Any() == true)
+                {
+                    <hr class="my-2" />
+                    <p class="text-warning fw-semibold mb-1 small"><i class="fas fa-disease me-1"></i>Bệnh nền:</p>
+                    @foreach (var bn in Model.HoSoBenhNhan.BenhNens)
+                    {
+                        <span class="badge bg-warning text-dark me-1 mb-1">@bn.TenBenhNen</span>
+                    }
+                }
+
+                @if (Model.HoSoBenhNhan?.DiUngThuocs.Any() == true)
+                {
+                    <hr class="my-2" />
+                    <p class="text-danger fw-semibold mb-1 small"><i class="fas fa-allergies me-1"></i>Dị ứng:</p>
+                    @foreach (var du in Model.HoSoBenhNhan.DiUngThuocs)
+                    {
+                        <span class="badge bg-danger me-1 mb-1">@du.HoatChat?.TenHoatChat</span>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-info text-white py-3">
+                <h6 class="mb-0"><i class="fas fa-stethoscope me-2"></i>Khuyến nghị lâm sàng</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-@statusClass border-0 mb-3">
+                    <i class="fas fa-@(statusClass == "success" ? "check-circle" : statusClass == "warning" ? "exclamation-circle" : "times-circle") me-2"></i>
+                    <strong>@Model.KhuyenNghiSuDung</strong>
+                </div>
+                <p class="text-muted small mb-1">
+                    <i class="fas fa-user-md me-1"></i><strong>Người đánh giá:</strong> @Model.NguoiDanhGia?.HoTen
+                </p>
+                <p class="text-muted small mb-1">
+                    <i class="fas fa-clock me-1"></i><strong>Thời điểm:</strong> @Model.NgayDanhGia.ToString("HH:mm - dd/MM/yyyy")
+                </p>
+                @if (!string.IsNullOrEmpty(Model.GhiChuPhienDanhGia))
+                {
+                    <p class="text-muted small mb-0">
+                        <i class="fas fa-sticky-note me-1"></i><strong>Ghi chú:</strong> @Model.GhiChuPhienDanhGia
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cảnh báo -->
+@if (!string.IsNullOrEmpty(Model.CanhBaoYTe) && Model.CanhBaoYTe != "Không có cảnh báo đặc biệt")
+{
+    <div class="card border-0 shadow-sm border-start border-danger border-4 mb-4">
+        <div class="card-header bg-danger text-white py-3">
+            <h6 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Cảnh báo y tế</h6>
+        </div>
+        <div class="card-body">
+            @foreach (var canh in Model.CanhBaoYTe.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+            {
+                <div class="alert alert-danger alert-sm py-2 mb-2">
+                    <i class="fas fa-exclamation-circle me-2"></i>@canh
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-success mb-4">
+        <i class="fas fa-check-circle me-2"></i><strong>Không có cảnh báo đặc biệt.</strong> Phác đồ thuốc không phát hiện vấn đề nghiêm trọng.
+    </div>
+}
+
+<!-- Chi tiết từng thuốc -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3">
+        <h6 class="fw-bold mb-0"><i class="fas fa-pills me-2 text-primary"></i>Chi tiết đánh giá từng thuốc</h6>
+    </div>
+    <div class="card-body p-0">
+        @foreach (var ct in Model.ChiTietDanhGias)
+        {
+            string cardBorder = ct.CoPhuHopKhong ? "border-success" : "border-danger";
+            string iconClass = ct.CoPhuHopKhong ? "fa-check-circle text-success" : "fa-times-circle text-danger";
+            string bgHeader = ct.CoPhuHopKhong ? "bg-success" : "bg-danger";
+            <div class="border-bottom p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="fas @iconClass fa-lg mt-1"></i>
+                        <div>
+                            <h6 class="fw-bold mb-1">@ct.Thuoc?.TenThuoc</h6>
+                            @if (!string.IsNullOrEmpty(ct.Thuoc?.TenBietDuoc))
+                            {
+                                <small class="text-muted">Biệt dược: @ct.Thuoc.TenBietDuoc</small><br />
+                            }
+                            @if (!string.IsNullOrEmpty(ct.LieuDungChiDinh))
+                            {
+                                <small class="text-primary"><i class="fas fa-prescription me-1"></i>Liều: @ct.LieuDungChiDinh</small>
+                            }
+                        </div>
+                    </div>
+                    <span class="badge @(ct.CoPhuHopKhong ? "bg-success" : "bg-danger") px-3 py-2">
+                        @(ct.CoPhuHopKhong ? "✓ Phù hợp" : "✗ Không phù hợp")
+                    </span>
+                </div>
+
+                @if (!string.IsNullOrEmpty(ct.LyDoKhongPhuHop))
+                {
+                    <div class="mt-2 ms-5">
+                        @foreach (var lydo in ct.LyDoKhongPhuHop.Split(';', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <div class="alert alert-warning py-1 px-3 mb-1 small">
+                                <i class="fas fa-exclamation-triangle me-1"></i>@lydo.Trim()
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+@@media print {
+    .btn, nav, .navbar { display: none !important; }
+    .card { box-shadow: none !important; border: 1px solid #ccc !important; }
+}
+</style>

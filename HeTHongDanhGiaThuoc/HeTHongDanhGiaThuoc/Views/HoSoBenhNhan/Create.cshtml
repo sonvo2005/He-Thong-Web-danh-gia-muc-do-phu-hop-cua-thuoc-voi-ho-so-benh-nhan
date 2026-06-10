@@ -1,0 +1,145 @@
+@model HoSoBenhNhan
+@{
+    ViewData["Title"] = "Thêm Hồ Sơ Bệnh Nhân";
+    var hoatChats = ViewBag.HoatChats as List<HoatChat> ?? new List<HoatChat>();
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="Index" class="btn btn-outline-secondary me-3">
+        ←
+    </a>
+    <h4 class="fw-bold text-primary mb-0">Thêm Hồ Sơ Bệnh Nhân</h4>
+</div>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="row g-3">
+
+        <!-- LEFT -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    Thông tin bệnh nhân
+                </div>
+
+                <div class="card-body">
+                    <input asp-for="MaDinhDanhBenhNhan" class="form-control mb-2" placeholder="Mã định danh" />
+                    <span asp-validation-for="MaDinhDanhBenhNhan" class="text-danger"></span>
+
+                    <input asp-for="HoTen" class="form-control mb-2" placeholder="Họ tên" />
+                    <span asp-validation-for="HoTen" class="text-danger"></span>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <select asp-for="GioiTinh" class="form-select mb-2">
+                                <option value="">Giới tính</option>
+                                <option>Nam</option>
+                                <option>Nữ</option>
+                                <option>Khác</option>
+                            </select>
+                        </div>
+
+                        <div class="col-6">
+                            <input asp-for="NgaySinh" type="date" class="form-control mb-2" />
+                        </div>
+                    </div>
+
+                    <textarea asp-for="DiaChi" class="form-control" placeholder="Địa chỉ"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-6">
+
+            <!-- BỆNH NỀN -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-warning d-flex justify-content-between">
+                    <span>Bệnh nền</span>
+                    <button type="button" class="btn btn-sm btn-dark" onclick="addBenhNen()">+</button>
+                </div>
+
+                <div class="card-body" id="benhNenContainer">
+                    <p id="emptyBenhNen" class="text-muted">Chưa có bệnh nền</p>
+                </div>
+            </div>
+
+            <!-- DỊ ỨNG -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-danger text-white d-flex justify-content-between">
+                        <span>Dị ứng hoạt chất</span>
+                        <button type="button" class="btn btn-sm btn-light" onclick="addDiUng()">+ Thêm</button>
+                    </div>
+
+                    <div class="card-body" id="diUngContainer">
+                        <p id="emptyDiUng" class="text-muted">Chưa có dị ứng</p>
+                    </div>
+                </div>
+
+        </div>
+    </div>
+
+    <button class="btn btn-primary mt-3">Lưu hồ sơ</button>
+</form>
+
+<script>
+    const hoatChats = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(hoatChats));
+
+    // ================= BỆNH NỀN =================
+    function addBenhNen() {
+
+        document.getElementById("emptyBenhNen")?.remove();
+
+        const row = document.createElement("div");
+        row.className = "row mb-2";
+
+        row.innerHTML = `
+            <div class="col-7">
+                <input name="tenBenhNens" class="form-control" placeholder="Tên bệnh nền">
+            </div>
+
+            <div class="col-4">
+                <input name="ngayChanDoans" type="date" class="form-control">
+            </div>
+
+            <div class="col-1">
+                <button type="button" class="btn btn-danger btn-sm"
+                    onclick="this.closest('.row').remove()">X</button>
+            </div>
+        `;
+
+        document.getElementById("benhNenContainer").appendChild(row);
+    }
+
+    // ================= DỊ ỨNG =================
+    function addDiUng() {
+
+        document.getElementById("emptyDiUng")?.remove();
+
+        const row = document.createElement("div");
+        row.className = "row mb-2";
+
+        row.innerHTML = `
+        <div class="col-7">
+            <input name="tenHoatChats" class="form-control" placeholder="Tên hoạt chất gây dị ứng">
+        </div>
+
+        <div class="col-4">
+            <select name="mucDoDiUngs" class="form-select">
+                <option value="Nhẹ">Nhẹ</option>
+                <option value="Trung bình">Trung bình</option>
+                <option value="Nặng">Nặng</option>
+                <option value="Nghiêm trọng">Nghiêm trọng</option>
+            </select>
+        </div>
+
+        <div class="col-1">
+            <button type="button" class="btn btn-danger btn-sm"
+                onclick="this.parentElement.parentElement.remove()">X</button>
+        </div>
+    `;
+
+        document.getElementById("diUngContainer").appendChild(row);
+    }
+</script>
