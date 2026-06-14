@@ -170,22 +170,11 @@
 
 @section Scripts {
 <script>
-            const hoatChatsData = @Html.Raw(
-                System.Text.Json.JsonSerializer.Serialize(
-                        hoatChats?.Select(h => new
-                        {
-                                maHoatChat = h.MaHoatChat,
-                                tenHoatChat = h.TenHoatChat
-                        })
-                        )
-                        );
+const hoatChatOptions = `@if (hoatChats != null) {
+    foreach (var hc in hoatChats)
+    { @("<option value='" + hc.MaHoatChat + "'>" + hc.TenHoatChat + "</option>") }
+}`;
 
-            const hoatChatOptions = hoatChatsData.map(h =>
-                `<option value="${h.maHoatChat}">
-                ${h.tenHoatChat}
-            </option>`
-            ).join('');
-            
 function themHoatChat() {
     const container = document.getElementById('dsHoatChat');
     const empty = document.getElementById('emptyHC');

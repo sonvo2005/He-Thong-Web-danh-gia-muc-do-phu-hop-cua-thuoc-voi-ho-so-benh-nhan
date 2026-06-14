@@ -4,7 +4,6 @@
     var hoatChats = ViewBag.HoatChats as List<HoatChat>;
 }
 
-
 <div class="d-flex align-items-center mb-4">
     <a asp-action="Details" asp-route-id="@Model.MaBenhNhan" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
     <h4 class="fw-bold text-primary mb-0"><i class="fas fa-edit me-2"></i>Chỉnh Sửa: @Model.HoTen</h4>
@@ -190,21 +189,10 @@
 
 @section Scripts {
 <script>
-            const hoatChatsData = @Html.Raw(
-                System.Text.Json.JsonSerializer.Serialize(
-                        hoatChats?.Select(h => new
-                        {
-                                maHoatChat = h.MaHoatChat,
-                                tenHoatChat = h.TenHoatChat
-                        })
-                        )
-                        );
-
-            const hoatChatOptions = hoatChatsData.map(h =>
-                `<option value="${h.maHoatChat}">
-                ${h.tenHoatChat}
-            </option>`
-            ).join('');
+const hoatChatOptions = `@if (hoatChats != null) {
+    foreach (var hc in hoatChats)
+    { @("<option value='" + hc.MaHoatChat + "'>" + hc.TenHoatChat + "</option>") }
+}`;
 
 function themBenhNen() {
     const empty = document.getElementById('emptyBN');

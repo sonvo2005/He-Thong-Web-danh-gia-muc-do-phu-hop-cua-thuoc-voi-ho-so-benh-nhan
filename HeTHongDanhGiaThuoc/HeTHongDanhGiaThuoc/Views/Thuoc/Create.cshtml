@@ -1,10 +1,7 @@
 @model Thuoc
 @{
     ViewData["Title"] = "Thêm Thuốc";
-     var hoatChats = ViewBag.HoatChats as List<HoatChat>; 
-    
-
-   
+    var hoatChats = ViewBag.HoatChats as List<HoatChat>;
 }
 
 <div class="d-flex align-items-center mb-4">
@@ -104,21 +101,13 @@
         <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
     </div>
 </form>
-@{
-    var optionHtml = string.Join("",
-        (hoatChats ?? new List<HoatChat>())
-        .Select(h => $"<option value='{h.MaHoatChat}'>{h.TenHoatChat}</option>")
-    );
-}
+
 @section Scripts {
 <script>
-        const hoatChatOptions = `@Html.Raw(optionHtml)`;
-
-        console.log(hoatChatOptions);
-@* const hoatChatOptions = `@if (hoatChats != null) {
+const hoatChatOptions = `@if (hoatChats != null) {
     foreach (var hc in hoatChats)
     { @("<option value='" + hc.MaHoatChat + "'>" + hc.TenHoatChat + "</option>") }
-}`; *@
+}`;
 
 function themHoatChat() {
     document.getElementById('emptyHC').style.display = 'none';
