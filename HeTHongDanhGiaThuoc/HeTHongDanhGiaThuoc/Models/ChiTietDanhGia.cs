@@ -8,26 +8,43 @@ namespace HeTHongDanhGiaThuoc.Models
         [Key]
         public int MaChiTietDanhGia { get; set; }
 
-        [Display(Name = "Đánh giá")]
         public int MaDanhGia { get; set; }
 
-        [Display(Name = "Thuốc")]
         public int MaThuoc { get; set; }
 
-        [MaxLength(255)]
-        [Display(Name = "Liều dùng chỉ định")]
+        // vẫn giữ lại để hiển thị
         public string? LieuDungChiDinh { get; set; }
 
-        [Display(Name = "Có phù hợp không")]
+        // ===================
+        // dữ liệu đánh giá
+        // ===================
+
+        [Display(Name = "Liều mỗi lần (mg)")]
+        public decimal? LieuMoiLanMg { get; set; }
+
+        [Display(Name = "Số lần mỗi ngày")]
+        public int? SoLanMoiNgay { get; set; }
+
+        [Display(Name = "Số ngày điều trị")]
+        public int? SoNgayDieuTri { get; set; }
+
+        [Display(Name = "Tổng liều mỗi ngày")]
+        public decimal? TongLieuNgayMg { get; set; }
+
         public bool CoPhuHopKhong { get; set; } = true;
 
-        [Display(Name = "Lý do không phù hợp")]
         public string? LyDoKhongPhuHop { get; set; }
 
-        [ForeignKey("MaDanhGia")]
+        public decimal? DiemPhuHop { get; set; }
+
+        public string? CanhBao { get; set; }
+
+        public string? KhuyenNghi { get; set; }
+
+        [ForeignKey(nameof(MaDanhGia))]
         public DanhGia? DanhGia { get; set; }
 
-        [ForeignKey("MaThuoc")]
+        [ForeignKey(nameof(MaThuoc))]
         public Thuoc? Thuoc { get; set; }
     }
 }

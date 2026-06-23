@@ -8,16 +8,19 @@ namespace HeTHongDanhGiaThuoc.Models
         [Key]
         public int MaThuocHoatChat { get; set; }
 
+        [Required]
         [Display(Name = "Thuốc")]
-        public int MaThuoc { get; set; }
+        public int MaThuoc { get; set; } //Khóa ngoại
 
+        [Required]
         [Display(Name = "Hoạt chất")]
-        public int MaHoatChat { get; set; }
+        public int MaHoatChat { get; set; } //Khóa ngoại
 
         [MaxLength(100)]
         [Display(Name = "Hàm lượng")]
         public string? HamLuong { get; set; }
 
+        //Truy vấn khóa ngoại
         [ForeignKey("MaThuoc")]
         public Thuoc? Thuoc { get; set; }
 

@@ -8,11 +8,13 @@ namespace HeTHongDanhGiaThuoc.Models
         [Key]
         public int MaDanhGia { get; set; }
 
+        [Required]
         [Display(Name = "Bệnh nhân")]
-        public int? MaBenhNhan { get; set; }
+        public int MaBenhNhan { get; set; }
 
+        [Required]
         [Display(Name = "Người đánh giá")]
-        public int? MaNguoiDanhGia { get; set; }
+        public int MaNguoiDanhGia { get; set; }
 
         [Display(Name = "Ngày đánh giá")]
         public DateTime NgayDanhGia { get; set; } = DateTime.Now;
@@ -37,5 +39,10 @@ namespace HeTHongDanhGiaThuoc.Models
         public NguoiDung? NguoiDanhGia { get; set; }
 
         public ICollection<ChiTietDanhGia> ChiTietDanhGias { get; set; } = new List<ChiTietDanhGia>();
+
+
+        [MaxLength(100)]
+        [Display(Name = "Kết luận")]
+        public string? KetLuan { get; set; }
     }
 }

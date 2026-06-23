@@ -40,6 +40,7 @@ namespace HeTHongDanhGiaThuoc.Models
         [ForeignKey("MaVaiTro")]
         public VaiTro? VaiTro { get; set; }
 
+    //Khóa ngoại
         public ICollection<HoSoBenhNhan> HoSoBenhNhans { get; set; } = new List<HoSoBenhNhan>();
         public ICollection<DanhGia> DanhGias { get; set; } = new List<DanhGia>();
     }

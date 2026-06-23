@@ -30,11 +30,9 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaBenhNen"));
 
-                    b.Property<int?>("MaBenhNhan")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("NgayChanDoan")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("TenBenhNen")
                         .IsRequired()
@@ -43,9 +41,37 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     b.HasKey("MaBenhNen");
 
-                    b.HasIndex("MaBenhNhan");
-
                     b.ToTable("BenhNen", (string)null);
+                });
+
+            modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.BenhNhanBenhNen", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("GhiChu")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaBenhNen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaBenhNhan")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("NgayChanDoan")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaBenhNen");
+
+                    b.HasIndex("MaBenhNhan", "MaBenhNen")
+                        .IsUnique();
+
+                    b.ToTable("BenhNhanBenhNen", (string)null);
                 });
 
             modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.ChiTietDanhGia", b =>
@@ -56,12 +82,23 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaChiTietDanhGia"));
 
+                    b.Property<string>("CanhBao")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("CoPhuHopKhong")
                         .HasColumnType("bit");
 
+                    b.Property<decimal?>("DiemPhuHop")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("KhuyenNghi")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LieuDungChiDinh")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("LieuMoiLanMg")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("LyDoKhongPhuHop")
                         .HasColumnType("nvarchar(max)");
@@ -71,6 +108,15 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     b.Property<int>("MaThuoc")
                         .HasColumnType("int");
+
+                    b.Property<int?>("SoLanMoiNgay")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SoNgayDieuTri")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("TongLieuNgayMg")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("MaChiTietDanhGia");
 
@@ -92,15 +138,19 @@ namespace HeTHongDanhGiaThuoc.Migrations
                     b.Property<string>("GhiChu")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MaBenhNen")
+                        .HasColumnType("int");
+
                     b.Property<int>("MaThuoc")
                         .HasColumnType("int");
 
-                    b.Property<string>("TenBenhChongChiDinh")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                    b.Property<string>("MucDoNguyHiem")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("MaChongChiDinh");
+
+                    b.HasIndex("MaBenhNen");
 
                     b.HasIndex("MaThuoc");
 
@@ -121,13 +171,17 @@ namespace HeTHongDanhGiaThuoc.Migrations
                     b.Property<string>("GhiChuPhienDanhGia")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("KetLuan")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("KhuyenNghiSuDung")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MaBenhNhan")
+                    b.Property<int>("MaBenhNhan")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MaNguoiDanhGia")
+                    b.Property<int>("MaNguoiDanhGia")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("NgayDanhGia")
@@ -153,10 +207,10 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaDiUng"));
 
-                    b.Property<int?>("MaBenhNhan")
+                    b.Property<int>("MaBenhNhan")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MaHoatChat")
+                    b.Property<int>("MaHoatChat")
                         .HasColumnType("int");
 
                     b.Property<string>("MucDoDiUng")
@@ -180,9 +234,21 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaBenhNhan"));
 
+                    b.Property<string>("BenhHienTai")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float?>("CanNang")
+                        .HasColumnType("real");
+
+                    b.Property<float?>("ChieuCao")
+                        .HasColumnType("real");
+
                     b.Property<string>("DiaChi")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("GhiChu")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GioiTinh")
                         .HasMaxLength(10)
@@ -207,6 +273,10 @@ namespace HeTHongDanhGiaThuoc.Migrations
                     b.Property<DateTime>("NgayTiepNhan")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NhomMau")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.HasKey("MaBenhNhan");
 
                     b.HasIndex("MaDinhDanhBenhNhan")
@@ -224,6 +294,10 @@ namespace HeTHongDanhGiaThuoc.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaHoatChat"));
+
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("TenHoatChat")
                         .IsRequired()
@@ -286,19 +360,6 @@ namespace HeTHongDanhGiaThuoc.Migrations
                         .IsUnique();
 
                     b.ToTable("NguoiDung", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            MaNguoiDung = 1,
-                            Email = "admin@hethong.com",
-                            HoTen = "Quản trị viên",
-                            MaVaiTro = 1,
-                            MatKhauMaHoa = "$2a$11$LwHiYJeSfXcTwon7BtHoPuo2mmuMNv3Mt4ku1gl075l63vWBk3mWm",
-                            NgayTao = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TenDangNhap = "admin",
-                            TrangThaiHoatDong = true
-                        });
                 });
 
             modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.Thuoc", b =>
@@ -309,16 +370,36 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaThuoc"));
 
+                    b.Property<decimal?>("CanNangToiDa")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("CanNangToiThieu")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("DangBaoChe")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("HuongDanSuDung")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LieuDungChuan")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("LieuKhuyenNghiMg")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("LieuToiDaMg")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("LieuToiThieuMg")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("MoTaChiTiet")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TanSuatToiDaMoiNgay")
+                        .HasColumnType("int");
 
                     b.Property<string>("TenBietDuoc")
                         .HasMaxLength(200)
@@ -331,12 +412,47 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     b.Property<string>("TinhTrangThuoc")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TuoiToiDa")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TuoiToiThieu")
+                        .HasColumnType("int");
 
                     b.HasKey("MaThuoc");
 
                     b.ToTable("Thuoc", (string)null);
+                });
+
+            modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.ThuocDangSuDung", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("LieuDung")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaBenhNhan")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaThuoc")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("NgayBatDau")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaThuoc");
+
+                    b.HasIndex("MaBenhNhan", "MaThuoc")
+                        .IsUnique();
+
+                    b.ToTable("ThuocDangSuDung", (string)null);
                 });
 
             modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.ThuocHoatChat", b =>
@@ -361,9 +477,10 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     b.HasIndex("MaHoatChat");
 
-                    b.HasIndex("MaThuoc");
+                    b.HasIndex("MaThuoc", "MaHoatChat")
+                        .IsUnique();
 
-                    b.ToTable("Thuoc_HoatChat", (string)null);
+                    b.ToTable("ThuocHoatChat", (string)null);
                 });
 
             modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.TuongTacThuoc", b =>
@@ -374,10 +491,10 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaTuongTac"));
 
-                    b.Property<int>("MaThuoc_A")
+                    b.Property<int>("MaThuocA")
                         .HasColumnType("int");
 
-                    b.Property<int>("MaThuoc_B")
+                    b.Property<int>("MaThuocB")
                         .HasColumnType("int");
 
                     b.Property<string>("MoTaTuongTac")
@@ -389,9 +506,9 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
                     b.HasKey("MaTuongTac");
 
-                    b.HasIndex("MaThuoc_A");
+                    b.HasIndex("MaThuocA");
 
-                    b.HasIndex("MaThuoc_B");
+                    b.HasIndex("MaThuocB");
 
                     b.ToTable("TuongTacThuoc", (string)null);
                 });
@@ -415,36 +532,23 @@ namespace HeTHongDanhGiaThuoc.Migrations
                         .IsUnique();
 
                     b.ToTable("VaiTro", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            MaVaiTro = 1,
-                            TenVaiTro = "Admin"
-                        },
-                        new
-                        {
-                            MaVaiTro = 2,
-                            TenVaiTro = "Bác sĩ"
-                        },
-                        new
-                        {
-                            MaVaiTro = 3,
-                            TenVaiTro = "Dược sĩ"
-                        },
-                        new
-                        {
-                            MaVaiTro = 4,
-                            TenVaiTro = "Y tá"
-                        });
                 });
 
-            modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.BenhNen", b =>
+            modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.BenhNhanBenhNen", b =>
                 {
+                    b.HasOne("HeTHongDanhGiaThuoc.Models.BenhNen", "BenhNen")
+                        .WithMany("BenhNhanBenhNens")
+                        .HasForeignKey("MaBenhNen")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HeTHongDanhGiaThuoc.Models.HoSoBenhNhan", "HoSoBenhNhan")
-                        .WithMany("BenhNens")
+                        .WithMany("BenhNhanBenhNens")
                         .HasForeignKey("MaBenhNhan")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BenhNen");
 
                     b.Navigation("HoSoBenhNhan");
                 });
@@ -470,11 +574,19 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
             modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.ChongChiDinh", b =>
                 {
+                    b.HasOne("HeTHongDanhGiaThuoc.Models.BenhNen", "BenhNen")
+                        .WithMany("ChongChiDinhs")
+                        .HasForeignKey("MaBenhNen")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("HeTHongDanhGiaThuoc.Models.Thuoc", "Thuoc")
                         .WithMany("ChongChiDinhs")
                         .HasForeignKey("MaThuoc")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BenhNen");
 
                     b.Navigation("Thuoc");
                 });
@@ -484,12 +596,14 @@ namespace HeTHongDanhGiaThuoc.Migrations
                     b.HasOne("HeTHongDanhGiaThuoc.Models.HoSoBenhNhan", "HoSoBenhNhan")
                         .WithMany("DanhGias")
                         .HasForeignKey("MaBenhNhan")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("HeTHongDanhGiaThuoc.Models.NguoiDung", "NguoiDanhGia")
                         .WithMany("DanhGias")
                         .HasForeignKey("MaNguoiDanhGia")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("HoSoBenhNhan");
 
@@ -501,12 +615,14 @@ namespace HeTHongDanhGiaThuoc.Migrations
                     b.HasOne("HeTHongDanhGiaThuoc.Models.HoSoBenhNhan", "HoSoBenhNhan")
                         .WithMany("DiUngThuocs")
                         .HasForeignKey("MaBenhNhan")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("HeTHongDanhGiaThuoc.Models.HoatChat", "HoatChat")
                         .WithMany("DiUngThuocs")
                         .HasForeignKey("MaHoatChat")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("HoSoBenhNhan");
 
@@ -534,6 +650,25 @@ namespace HeTHongDanhGiaThuoc.Migrations
                     b.Navigation("VaiTro");
                 });
 
+            modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.ThuocDangSuDung", b =>
+                {
+                    b.HasOne("HeTHongDanhGiaThuoc.Models.HoSoBenhNhan", "HoSoBenhNhan")
+                        .WithMany("ThuocDangSuDungs")
+                        .HasForeignKey("MaBenhNhan")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HeTHongDanhGiaThuoc.Models.Thuoc", "Thuoc")
+                        .WithMany()
+                        .HasForeignKey("MaThuoc")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("HoSoBenhNhan");
+
+                    b.Navigation("Thuoc");
+                });
+
             modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.ThuocHoatChat", b =>
                 {
                     b.HasOne("HeTHongDanhGiaThuoc.Models.HoatChat", "HoatChat")
@@ -557,19 +692,26 @@ namespace HeTHongDanhGiaThuoc.Migrations
                 {
                     b.HasOne("HeTHongDanhGiaThuoc.Models.Thuoc", "ThuocA")
                         .WithMany("TuongTacA")
-                        .HasForeignKey("MaThuoc_A")
+                        .HasForeignKey("MaThuocA")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HeTHongDanhGiaThuoc.Models.Thuoc", "ThuocB")
                         .WithMany("TuongTacB")
-                        .HasForeignKey("MaThuoc_B")
+                        .HasForeignKey("MaThuocB")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ThuocA");
 
                     b.Navigation("ThuocB");
+                });
+
+            modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.BenhNen", b =>
+                {
+                    b.Navigation("BenhNhanBenhNens");
+
+                    b.Navigation("ChongChiDinhs");
                 });
 
             modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.DanhGia", b =>
@@ -579,11 +721,13 @@ namespace HeTHongDanhGiaThuoc.Migrations
 
             modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.HoSoBenhNhan", b =>
                 {
-                    b.Navigation("BenhNens");
+                    b.Navigation("BenhNhanBenhNens");
 
                     b.Navigation("DanhGias");
 
                     b.Navigation("DiUngThuocs");
+
+                    b.Navigation("ThuocDangSuDungs");
                 });
 
             modelBuilder.Entity("HeTHongDanhGiaThuoc.Models.HoatChat", b =>

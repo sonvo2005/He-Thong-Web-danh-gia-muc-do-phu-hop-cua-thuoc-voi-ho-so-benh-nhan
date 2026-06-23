@@ -11,6 +11,7 @@ namespace HeTHongDanhGiaThuoc.Models
         [Display(Name = "Tên vai trò")]
         public string TenVaiTro { get; set; } = string.Empty;
 
+    //Khóa ngoại
         public ICollection<NguoiDung> NguoiDungs { get; set; } = new List<NguoiDung>();
     }
 }
