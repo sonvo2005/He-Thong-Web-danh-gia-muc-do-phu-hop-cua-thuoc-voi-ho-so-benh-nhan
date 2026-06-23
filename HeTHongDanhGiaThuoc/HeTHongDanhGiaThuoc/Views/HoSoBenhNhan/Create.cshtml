@@ -203,11 +203,19 @@
 
 </form>
 
+<<<<<<< HEAD
 
 
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial" />
+=======
+<script>
+    const hoatChats = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(hoatChats));
+
+    // ================= BỆNH NỀN =================
+    function addBenhNen() {
+>>>>>>> origin/develop
 
 
     <script>
@@ -265,11 +273,18 @@
             </option>`
         ).join('');
 
+<<<<<<< HEAD
         const thuocOptions = thuocsData.map(t =>
             `<option value="${t.maThuoc}">
                 ${t.tenThuoc}
             </option>`
         ).join('');
+=======
+        row.innerHTML = `
+        <div class="col-7">
+            <input name="tenHoatChats" class="form-control" placeholder="Tên hoạt chất gây dị ứng">
+        </div>
+>>>>>>> origin/develop
 
         // =====================================================
         // THÊM BỆNH NỀN
@@ -278,6 +293,7 @@
         // Tên bệnh nền + Ngày chẩn đoán
         // =====================================================
 
+<<<<<<< HEAD
         function addBenhNen() {
 
             document.getElementById("emptyBenhNen")?.remove();
@@ -440,3 +456,14 @@
 
 }
 
+=======
+        <div class="col-1">
+            <button type="button" class="btn btn-danger btn-sm"
+                onclick="this.parentElement.parentElement.remove()">X</button>
+        </div>
+    `;
+
+        document.getElementById("diUngContainer").appendChild(row);
+    }
+</script>
+>>>>>>> origin/develop

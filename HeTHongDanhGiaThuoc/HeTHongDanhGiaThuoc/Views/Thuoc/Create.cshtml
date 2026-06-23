@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Thêm Thuốc";
+<<<<<<< HEAD
 
 
 var hoatChats = ViewBag.HoatChats as List<HoatChat> ?? new();
@@ -17,6 +18,9 @@ var hoatChats = ViewBag.HoatChats as List<HoatChat> ?? new();
             $"<option value='{x.MaBenhNen}'>{x.TenBenhNen}</option>"));
 
 
+=======
+    var hoatChats = ViewBag.HoatChats as List<HoatChat>;
+>>>>>>> origin/develop
 }
 
 <div class="d-flex align-items-center mb-4">
@@ -253,8 +257,16 @@ var hoatChats = ViewBag.HoatChats as List<HoatChat> ?? new();
 </form>
 
 @section Scripts {
+<<<<<<< HEAD
 
     <script>
+=======
+<script>
+const hoatChatOptions = `@if (hoatChats != null) {
+    foreach (var hc in hoatChats)
+    { @("<option value='" + hc.MaHoatChat + "'>" + hc.TenHoatChat + "</option>") }
+}`;
+>>>>>>> origin/develop
 
         const hoatChatOptions = `@Html.Raw(hcOptions)`;
         const benhNenOptions = `@Html.Raw(benhOptions)`;

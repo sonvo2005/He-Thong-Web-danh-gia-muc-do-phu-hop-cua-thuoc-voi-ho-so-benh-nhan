@@ -134,8 +134,12 @@ namespace HeTHongDanhGiaThuoc.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+<<<<<<< HEAD
             ViewBag.HoatChats = await _context.HoatChats.ToListAsync();
             ViewBag.BenhNens = await _context.BenhNens.ToListAsync();
+=======
+            ViewBag.HoatChats = await _context.HoatChats.OrderBy(h => h.TenHoatChat).ToListAsync();
+>>>>>>> origin/develop
             return View();
         }
 

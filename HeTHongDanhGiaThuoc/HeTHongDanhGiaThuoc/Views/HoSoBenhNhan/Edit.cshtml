@@ -297,11 +297,20 @@
 {
     <partial name="_ValidationScriptsPartial" />
 
+<<<<<<< HEAD
     <script>
 
         // =====================================================
         // DATA FROM CONTROLLER
         // =====================================================
+=======
+@section Scripts {
+<script>
+const hoatChatOptions = `@if (hoatChats != null) {
+    foreach (var hc in hoatChats)
+    { @("<option value='" + hc.MaHoatChat + "'>" + hc.TenHoatChat + "</option>") }
+}`;
+>>>>>>> origin/develop
 
         const hoatChatsData = @Html.Raw(
             System.Text.Json.JsonSerializer.Serialize(

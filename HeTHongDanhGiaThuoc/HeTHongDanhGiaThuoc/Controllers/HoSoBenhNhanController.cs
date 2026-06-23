@@ -94,6 +94,7 @@ namespace HeTHongDanhGiaThuoc.Controllers
         }
 
         // ================= CREATE =================
+<<<<<<< HEAD
         [HttpGet]//Get là phương tức lấy dữ liệu
         public async Task<IActionResult> Create() //Gọi hàm khi người dùng ấn "Thêm bệnh nhân"
         {
@@ -116,6 +117,11 @@ namespace HeTHongDanhGiaThuoc.Controllers
             // ViewBag.Thuocs = dsThuoc;
 
             // ViewBag.DebugThuocCount = dsThuoc.Count;
+=======
+        [HttpGet]
+        public IActionResult Create()
+        {
+>>>>>>> origin/develop
             return View();
         }
 
@@ -251,16 +257,23 @@ namespace HeTHongDanhGiaThuoc.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+<<<<<<< HEAD
             var benhNhan = await _context.HoSoBenhNhans //Truy vấn database
                 .Include(x => x.BenhNhanBenhNens)//Lấy ds bệnh nền theo bệnh nhân
                     .ThenInclude(x => x.BenhNen)//Lấy ds bệnh nền 
                 .Include(x => x.DiUngThuocs) //Lấy ds dị ứng (dị ứng với những hoạt chất nào)
                 .Include(x => x.ThuocDangSuDungs)
+=======
+            var data = await _context.HoSoBenhNhans
+                .Include(x => x.BenhNens)
+                .Include(x => x.DiUngThuocs)
+                    .ThenInclude(x => x.HoatChat)
+>>>>>>> origin/develop
                 .FirstOrDefaultAsync(x => x.MaBenhNhan == id);
 
-            if (benhNhan == null)
-                return NotFound();
+            if (data == null) return NotFound();
 
+<<<<<<< HEAD
             ViewBag.HoatChats = await _context.HoatChats//Tải dữ hoạt chất (dị ứng hoạt chất) từ database
                 .OrderBy(x => x.TenHoatChat)//Sắp xếp theo tên hoạt chất
                 .ToListAsync();
@@ -278,6 +291,11 @@ namespace HeTHongDanhGiaThuoc.Controllers
         }
 
 
+=======
+            return View(data);
+        }
+
+>>>>>>> origin/develop
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(

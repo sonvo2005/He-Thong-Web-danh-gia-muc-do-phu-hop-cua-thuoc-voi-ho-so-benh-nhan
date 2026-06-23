@@ -1,0 +1,117 @@
+@{
+    ViewData["Title"] = "BM03: Kết quả đánh giá";
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-light border-0 py-3">
+        <h5 class="mb-0 fw-bold text-secondary">
+            <i class="bi bi-check-circle-fill me-2"></i>Form BM03: Kết quả Đánh giá Mức độ Phù hợp
+        </h5>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded border h-100">
+                    <h6 class="fw-bold text-dark mb-2">Thông tin bệnh nhân</h6>
+                    <p class="mb-1 small"><strong>Bệnh nhân:</strong> Nguyễn Văn A (Mã BN: P12345)</p>
+                    <p class="mb-0 small"><strong>Tình trạng:</strong> Suy thận nhẹ, Cao huyết áp</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded border h-100 d-flex flex-column justify-content-center">
+                    <h6 class="fw-bold text-dark mb-2">Thuốc đang đánh giá</h6>
+                    <div class="w-100">
+                        <select class="form-select form-select-sm fw-bold text-primary">
+                            <option>Metformin</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-5 text-center">
+                <div
+                    class="p-3 bg-light rounded border h-100 d-flex flex-column align-items-center justify-content-center">
+                    <h6 class="fw-bold text-primary mb-4">Tổng quan mức độ phù hợp</h6>
+                    <div class="position-relative d-flex align-items-center justify-content-center"
+                         style="width: 200px; height: 100px; overflow: hidden;">
+                        <div class="position-absolute top-0 start-0 w-100 h-100 rounded-top"
+                             style="border: 20px solid #dee2e6; border-bottom: none; box-sizing: border-box;"></div>
+                        <div class="position-absolute top-0 start-0 w-100 h-100 rounded-top"
+                             style="border: 20px solid #ffc107; border-bottom: none; border-right-color: transparent; border-top-color: #ffc107; box-sizing: border-box; transform: rotate(72deg); transform-origin: bottom center;">
+                        </div>
+                        <div class="position-absolute bottom-0 bg-dark"
+                             style="width: 4px; height: 80px; transform: rotate(-36deg); transform-origin: bottom center; bottom: 0;">
+                        </div>
+                    </div>
+                    <h2 class="fw-bold text-warning mt-3 mb-0">40%</h2>
+                    <p class="small text-muted mt-1">Mức độ tương thích trung bình - Cần điều chỉnh</p>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="p-3 bg-white rounded border border-danger">
+                    <div class="bg-danger text-white p-2 rounded mb-3 fw-bold small">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>CẢNH BÁO NGUY CƠ (Alerts)
+                    </div>
+                    <div class="vstack gap-2">
+                        <div class="alert alert-danger d-flex align-items-start p-2 mb-0 border-0 shadow-sm small">
+                            <span class="badge bg-danger me-2 mt-1">Đỏ</span>
+                            <div>
+                                <strong>Nguy cơ Tương tác Thuốc:</strong> Phản ứng mức độ Nặng giữa Metformin và Thuốc X
+                                (đang dùng).
+                            </div>
+                        </div>
+                        <div
+                            class="alert alert-warning d-flex align-items-start p-2 mb-0 border-0 shadow-sm small text-dark">
+                            <span class="badge bg-warning text-dark me-2 mt-1">Cam</span>
+                            <div>
+                                <strong>Chống chỉ định sinh học:</strong> Thận trọng: Creatinine bệnh nhân (1.5) gần mức
+                                giới hạn tối đa (1.6) định nghĩa cho Metformin.
+                            </div>
+                        </div>
+                        <div
+                            class="alert alert-warning d-flex align-items-start p-2 mb-0 border-0 shadow-sm small text-dark">
+                            <span class="badge bg-warning text-dark me-2 mt-1">Cam</span>
+                            <div>
+                                <strong>Dị ứng hoạt chất:</strong> Cảnh báo: Metformin thuộc nhóm có thể gây phản ứng dị
+                                ứng liên quan đến tiền sử dị ứng đã ghi nhận.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 bg-light rounded border mt-4">
+            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Khuyến cáo điều chỉnh liều / Thay thế thuốc</h6>
+            <div class="list-group list-group-flush small bg-white rounded border">
+                <div class="list-group-item list-group-item-action py-2"><i class="bi bi-dot me-2 text-primary"></i>Cân
+                    nhắc giảm liều Metformin xuống 500mg.</div>
+                    <div class="list-group-item list-group-item-action py-2"><i
+                        class="bi bi-dot me-2 text-primary"></i>Chuyển sang thuốc thay thế: Gliclazide (ít ảnh hưởng
+                        chức năng thận).</div>
+                        <div class="list-group-item list-group-item-action py-2"><i class="bi bi-dot me-2 text-primary"></i>Tăng
+                            tần suất theo dõi chức năng thận định kỳ.</div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-light rounded border mt-4">
+                        <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Xác nhận từ chuyên gia y tế</h6>
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control form-control-sm"
+                                       placeholder="Nhập chữ ký điện tử hoặc ghi chú của chuyên gia...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top p-3 d-flex justify-content-end gap-2">
+                    <a asp-action="MucLucThuoc" class="btn btn-outline-secondary px-3"><i class="bi bi-arrow-left"></i> Quay lại
+                        BM02</a>
+                        <button class="btn btn-success px-4" type="button">Phê duyệt kê đơn (Có điều chỉnh)</button>
+                        <button class="btn btn-danger px-4" type="button">Từ chối kê đơn</button>
+                        <button class="btn btn-dark px-3" type="button"><i class="bi bi-printer me-1"></i> In phiếu kết quả</button>
+                    </div>
+                </div>
