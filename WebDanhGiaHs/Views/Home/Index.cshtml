@@ -1,0 +1,127 @@
+﻿@{
+    ViewData["Title"] = "BM01: Tiếp nhận hồ sơ bệnh nhân";
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-light border-0 py-3">
+        <h5 class="mb-0 fw-bold text-secondary"><i class="bi bi-file-earmark-medical me-2"></i>Form BM01: Tiếp nhận & Cập nhật Hồ sơ Bệnh nhân</h5>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="p-3 bg-light rounded border mb-4">
+                    <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Thông tin cơ bản</h6>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Mã bệnh nhân</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Nhập mã bệnh nhân...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Họ và tên</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Nhập họ và tên...">
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">Ngày sinh</label>
+                            <input type="date" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">Giới tính</label>
+                            <select class="form-select form-select-sm">
+                                <option>Nam</option>
+                                <option>Nữ</option>
+                                <option>Khác</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">Nhóm máu</label>
+                            <select class="form-select form-select-sm"><option>A</option><option>B</option><option>O</option><option>AB</option></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted">Yếu tố Rh</label>
+                            <select class="form-select form-select-sm"><option>Rh+</option><option>Rh-</option></select>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small fw-bold text-muted">Cân nặng (kg) / Chiều cao (cm)</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Ví dụ: 65 / 170">
+                    </div>
+                </div>
+
+                <div class="p-3 bg-light rounded border">
+                    <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Thông tin liên lạc</h6>
+                    <input type="text" class="form-control form-control-sm mb-2" placeholder="Số điện thoại...">
+                    <input type="text" class="form-control form-control-sm" placeholder="Địa chỉ thường trú...">
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="p-3 bg-light rounded border h-100">
+                    <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Dữ liệu y tế quan trọng</h6>
+                    
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label small fw-bold text-muted mb-0">Tiền sử dị ứng</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="noAllergy">
+                                <label class="form-check-label small" for="noAllergy">Không ghi nhận dị ứng</label>
+                            </div>
+                        </div>
+                        <div class="border bg-white p-2 rounded d-flex flex-wrap gap-1 align-items-center">
+                            <span class="badge bg-secondary d-flex align-items-center p-2">Penicillin <i class="bi bi-x ms-1 cursor-pointer"></i></span>
+                            <span class="badge bg-secondary d-flex align-items-center p-2">Peanuts <i class="bi bi-x ms-1 cursor-pointer"></i></span>
+                            <span class="badge bg-secondary d-flex align-items-center p-2">Lactose <i class="bi bi-x ms-1 cursor-pointer"></i></span>
+                            <input type="text" class="form-control form-control-sm border-0 flex-grow-1" style="min-width: 120px;" placeholder="Thêm dị ứng...">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted mb-2">Tình trạng bệnh lý hiện tại</label>
+                        <div class="row g-2">
+                            <div class="col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label small">Tiểu đường Type 2</label></div></div>
+                            <div class="col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label small">Cao huyết áp</label></div></div>
+                            <div class="col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label small">Suy gan</label></div></div>
+                            <div class="col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label small">Suy thận</label></div></div>
+                            <div class="col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label small">Đường huyết kém</label></div></div>
+                            <div class="col-md-4"><input type="text" class="form-control form-control-sm" placeholder="Bệnh lý khác..."></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted mb-2">Chỉ số xét nghiệm gần nhất</label>
+                        <div class="row g-3">
+                            <div class="col-md-4"><label class="small text-muted mb-1">ALT (U/L)</label><input type="number" class="form-control form-control-sm"></div>
+                            <div class="col-md-4"><label class="small text-muted mb-1">AST (U/L)</label><input type="number" class="form-control form-control-sm"></div>
+                            <div class="col-md-4"><label class="small text-muted mb-1">Creatinine (mg/dL)</label><input type="number" step="0.1" class="form-control form-control-sm"></div>
+                            <div class="col-md-6"><label class="small text-muted mb-1">Huyết áp (mmHg)</label><input type="text" class="form-control form-control-sm" placeholder="120/80"></div>
+                            <div class="col-md-6"><label class="small text-muted mb-1">Đường huyết (mmol/L)</label><input type="number" step="0.1" class="form-control form-control-sm"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label small fw-bold text-muted mb-0">Thuốc đang sử dụng</label>
+                            <button class="btn btn-primary btn-sm px-3" style="font-size:0.75rem;"><i class="bi bi-plus-lg me-1"></i>Thêm thuốc</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered bg-white text-center small mb-0">
+                                <thead class="table-secondary">
+                                    <tr><th>Tên thuốc</th><th>Hoạt chất</th><th>Liều lượng</th><th>Tần suất</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="4" class="text-muted py-3">Chưa có dữ liệu thuốc đang sử dụng</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer bg-white border-top p-3 d-flex justify-content-end gap-2">
+        <button class="btn btn-success px-4" type="button">Lưu hồ sơ</button>
+        <button class="btn btn-outline-danger px-3" type="button">Hủy bỏ</button>
+        <a asp-action="MucLucThuoc" class="btn btn-primary px-4">Chuyển sang Đánh giá thuốc <i class="bi bi-arrow-right ms-1"></i></a>
+    </div>
+</div>

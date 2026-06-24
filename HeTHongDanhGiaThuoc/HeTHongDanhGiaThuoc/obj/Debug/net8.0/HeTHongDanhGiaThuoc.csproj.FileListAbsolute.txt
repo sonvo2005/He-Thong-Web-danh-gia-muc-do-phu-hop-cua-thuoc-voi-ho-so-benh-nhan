@@ -1,0 +1,10 @@
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\HeTHongDanhGiaThuoc.csproj.AssemblyReference.cache
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\HeTHongDanhGiaThuoc.GeneratedMSBuildEditorConfig.editorconfig
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\HeTHongDanhGiaThuoc.AssemblyInfoInputs.cache
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\HeTHongDanhGiaThuoc.AssemblyInfo.cs
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\HeTHongDanhGiaThuoc.csproj.CoreCompileInputs.cache
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\HeTHongDanhGiaThuoc.MvcApplicationPartsAssemblyInfo.cache
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\HeTHongDanhGiaThuoc.RazorAssemblyInfo.cache
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\HeTHongDanhGiaThuoc.RazorAssemblyInfo.cs
+D:\Đồ Án Cuối Kỳ\Đồ án CNPM\He-Thong-Web-danh-gia-muc-do-phu-hop-cua-thuoc-voi-ho-so-benh-nhan\HeTHongDanhGiaThuoc\HeTHongDanhGiaThuoc\obj\Debug\net8.0\HeTHongDanhGiaThuoc.sourcelink.json

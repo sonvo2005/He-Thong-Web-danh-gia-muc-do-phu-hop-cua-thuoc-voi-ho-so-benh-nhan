@@ -1,0 +1,74 @@
+@model LoginViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Đăng nhập";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - Hệ Thống Đánh Giá Thuốc</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="login-bg">
+    <div class="min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="login-card shadow-lg">
+            <div class="login-header text-center py-4">
+                <i class="fas fa-pills fa-3x text-white mb-2"></i>
+                <h4 class="text-white fw-bold mb-0">Hệ Thống Đánh Giá Thuốc</h4>
+                <small class="text-white-50">Đánh giá mức độ phù hợp hồ sơ bệnh nhân</small>
+            </div>
+            <div class="card-body p-4">
+                <h5 class="text-center mb-4 text-muted">Đăng nhập hệ thống</h5>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <form asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+                    <div class="mb-3">
+                        <label asp-for="TenDangNhap" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input asp-for="TenDangNhap" class="form-control" placeholder="Nhập tên đăng nhập" autofocus />
+                        </div>
+                        <span asp-validation-for="TenDangNhap" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MatKhau" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input asp-for="MatKhau" class="form-control" placeholder="Nhập mật khẩu" />
+                        </div>
+                        <span asp-validation-for="MatKhau" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="GhiNho" class="form-check-input" />
+                        <label asp-for="GhiNho" class="form-check-label">Ghi nhớ đăng nhập</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                        <i class="fas fa-sign-in-alt me-2"></i>Đăng nhập
+                    </button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <small class="text-muted">Tài khoản mặc định: <strong>admin</strong> / <strong>Admin@123</strong></small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+@model NguoiDungViewModel
+@{
+    ViewData["Title"] = "Sửa Người Dùng";
+    var vaiTros = ViewBag.VaiTros as List<VaiTro>;
+}
+
+<div class="d-flex align-items-center mb-4">
+    <a asp-action="NguoiDung" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <h4 class="fw-bold text-primary mb-0"><i class="fas fa-user-edit me-2"></i>Chỉnh Sửa: @Model.HoTen</h4>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark py-3">
+                <h6 class="mb-0">Thông tin tài khoản</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="SuaNguoiDung" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="MaNguoiDung" />
+                    <div asp-validation-summary="All" class="alert alert-danger" style="display:@(ViewData.ModelState.ErrorCount > 0 ? "block" : "none")"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="HoTen" class="form-label fw-semibold"></label>
+                        <input asp-for="HoTen" class="form-control" />
+                        <span asp-validation-for="HoTen" class="text-danger small"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label asp-for="TenDangNhap" class="form-label fw-semibold"></label>
+                            <input asp-for="TenDangNhap" class="form-control bg-light" readonly />
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label asp-for="MatKhauMoi" class="form-label fw-semibold">Mật khẩu mới</label>
+                            <input asp-for="MatKhauMoi" type="password" class="form-control" placeholder="Để trống nếu không đổi" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold"></label>
+                        <input asp-for="Email" class="form-control" />
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label asp-for="SoDienThoai" class="form-label fw-semibold"></label>
+                            <input asp-for="SoDienThoai" class="form-control" />
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label asp-for="MaVaiTro" class="form-label fw-semibold"></label>
+                            <select asp-for="MaVaiTro" class="form-select">
+                                @if (vaiTros != null)
+                                {
+                                    foreach (var vt in vaiTros)
+                                    {
+                                        if (vt.MaVaiTro == Model.MaVaiTro)
+                                        {
+                                            <option value="@vt.MaVaiTro" selected>
+                                                @vt.TenVaiTro
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@vt.MaVaiTro">
+                                                @vt.TenVaiTro
+                                            </option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input asp-for="TrangThaiHoatDong" class="form-check-input" />
+                        <label asp-for="TrangThaiHoatDong" class="form-check-label">Tài khoản hoạt động</label>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-warning px-4">
+                            <i class="fas fa-save me-2"></i>Lưu thay đổi
+                        </button>
+                        <a asp-action="NguoiDung" class="btn btn-outline-secondary">Hủy</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
