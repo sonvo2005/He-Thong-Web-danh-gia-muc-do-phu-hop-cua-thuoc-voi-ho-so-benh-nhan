@@ -31,10 +31,10 @@ namespace HeTHongDanhGiaThuoc.Models
         public string? NhomMau { get; set; }
 
         [Display(Name = "Chiều cao (cm)")]
-        public float? ChieuCao { get; set; }
+        public decimal? ChieuCao { get; set; }
 
         [Display(Name = "Cân nặng (kg)")]
-        public float? CanNang { get; set; }
+        public decimal? CanNang { get; set; }
 
         [MaxLength(255)]
         [Display(Name = "Địa chỉ")]
