@@ -1,141 +1,292 @@
 @model Thuoc
+
 @{
     ViewData["Title"] = Model.TenThuoc;
-    var allTuongTac = Model.TuongTacA.Concat(Model.TuongTacB).ToList();
+
+    var tuongTacList =
+        (Model.TuongTacA ?? new List<TuongTacThuoc>())
+        .Concat(Model.TuongTacB ?? new List<TuongTacThuoc>())
+        .ToList();
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
+
     <div class="d-flex align-items-center">
-        <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+        <a asp-action="Index" class="btn btn-outline-secondary me-3">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
         <h4 class="fw-bold text-primary mb-0">
-            <i class="fas fa-pills me-2"></i>@Model.TenThuoc
+            <i class="fas fa-pills me-2"></i>
+            @Model.TenThuoc
         </h4>
     </div>
+
     @if (User.IsInRole("Admin") || User.IsInRole("Dược sĩ"))
     {
         <a asp-action="Edit" asp-route-id="@Model.MaThuoc" class="btn btn-warning">
             <i class="fas fa-edit me-1"></i>Chỉnh sửa
         </a>
     }
+
 </div>
 
 <div class="row g-3">
-    <!-- Thông tin cơ bản -->
+
+    <!-- ================= LEFT ================= -->
     <div class="col-lg-5">
+
+        <!-- THÔNG TIN CHUNG -->
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-header bg-primary text-white py-3">
-                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Thông tin thuốc</h6>
+                <h6 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Thông tin thuốc
+                </h6>
             </div>
+
             <div class="card-body">
+
                 <table class="table table-sm table-borderless mb-0">
+
                     <tr>
-                        <td class="text-muted fw-semibold" style="width:40%">Tên thuốc:</td>
+                        <td class="text-muted fw-semibold">Tên thuốc</td>
                         <td><strong>@Model.TenThuoc</strong></td>
                     </tr>
+
                     <tr>
-                        <td class="text-muted fw-semibold">Biệt dược:</td>
+                        <td class="text-muted fw-semibold">Biệt dược</td>
                         <td>@Model.TenBietDuoc</td>
                     </tr>
+
                     <tr>
-                        <td class="text-muted fw-semibold">Dạng bào chế:</td>
-                        <td><span class="badge bg-light text-dark border">@Model.DangBaoChe</span></td>
+                        <td class="text-muted fw-semibold">Dạng bào chế</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model.DangBaoChe))
+                            {
+                                <span class="badge bg-light text-dark border">
+                                    @Model.DangBaoChe
+                                </span>
+                            }
+                        </td>
                     </tr>
+
                     <tr>
-                        <td class="text-muted fw-semibold">Liều dùng chuẩn:</td>
+                        <td class="text-muted fw-semibold">Liều mô tả</td>
                         <td>@Model.LieuDungChuan</td>
                     </tr>
+
                     <tr>
-                        <td class="text-muted fw-semibold">Tình trạng:</td>
+                        <td class="text-muted fw-semibold">Liều tối thiểu</td>
+                        <td>@Model.LieuToiThieuMg</td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-muted fw-semibold">Liều tối đa</td>
+                        <td>@Model.LieuToiDaMg</td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-muted fw-semibold">Khuyến nghị</td>
                         <td>
-                            <span class="badge @(Model.TinhTrangThuoc == "Hoạt động" ? "bg-success" : "bg-secondary")">
+                            <span class="badge bg-success">
+                                @Model.LieuKhuyenNghiMg
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-muted fw-semibold">Tần suất/ngày</td>
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                @Model.TanSuatToiDaMoiNgay
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-muted fw-semibold">Tuổi áp dụng</td>
+                        <td>
+                            @Model.TuoiToiThieu - @Model.TuoiToiDa tuổi
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-muted fw-semibold">Cân nặng áp dụng</td>
+                        <td>
+                            @Model.CanNangToiThieu - @Model.CanNangToiDa kg
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="text-muted fw-semibold">Trạng thái</td>
+                        <td>
+                            <span class="badge @(Model.TinhTrangThuoc == "Hoạt động"
+                                                                  ? "bg-success"
+                                                                  : "bg-secondary")">
                                 @Model.TinhTrangThuoc
                             </span>
                         </td>
                     </tr>
+
                 </table>
+
                 @if (!string.IsNullOrEmpty(Model.MoTaChiTiet))
                 {
                     <hr />
-                    <p class="text-muted small mb-0">@Model.MoTaChiTiet</p>
+                    <p class="text-muted small mb-0">
+                        @Model.MoTaChiTiet
+                    </p>
                 }
+
             </div>
         </div>
 
-        <!-- Hoạt chất -->
+        <!-- HOẠT CHẤT -->
         <div class="card border-0 shadow-sm">
+
             <div class="card-header bg-info text-white py-3">
-                <h6 class="mb-0"><i class="fas fa-atom me-2"></i>Hoạt chất (@Model.ThuocHoatChats.Count)</h6>
+                <h6 class="mb-0">
+                    <i class="fas fa-atom me-2"></i>
+                    Hoạt chất (@(Model.ThuocHoatChats?.Count ?? 0))
+                </h6>
             </div>
-            <div class="card-body">
-                @if (!Model.ThuocHoatChats.Any())
-                {
-                    <p class="text-muted mb-0">Chưa có thông tin hoạt chất</p>
-                }
-                @foreach (var thc in Model.ThuocHoatChats)
-                {
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-semibold">@thc.HoatChat?.TenHoatChat</span>
-                        @if (!string.IsNullOrEmpty(thc.HamLuong))
-                        {
-                            <span class="badge bg-light text-dark border">@thc.HamLuong</span>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
 
-    <!-- Chống chỉ định & tương tác -->
-    <div class="col-lg-7">
-        <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header bg-danger text-white py-3">
-                <h6 class="mb-0"><i class="fas fa-ban me-2"></i>Chống chỉ định (@Model.ChongChiDinhs.Count)</h6>
-            </div>
             <div class="card-body">
-                @if (!Model.ChongChiDinhs.Any())
-                {
-                    <p class="text-muted mb-0">Không có chống chỉ định ghi nhận</p>
-                }
-                @foreach (var ccd in Model.ChongChiDinhs)
-                {
-                    <div class="alert alert-danger alert-sm py-2 px-3 mb-2">
-                        <strong>@ccd.TenBenhChongChiDinh</strong>
-                        @if (!string.IsNullOrEmpty(ccd.GhiChu))
-                        {
-                            <br /><small>@ccd.GhiChu</small>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
 
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-warning text-dark py-3">
-                <h6 class="mb-0"><i class="fas fa-exchange-alt me-2"></i>Tương tác thuốc (@allTuongTac.Count)</h6>
-            </div>
-            <div class="card-body">
-                @if (!allTuongTac.Any())
+                @if (Model.ThuocHoatChats == null || !Model.ThuocHoatChats.Any())
                 {
-                    <p class="text-muted mb-0">Không có tương tác thuốc ghi nhận</p>
+                    <p class="text-muted mb-0">Chưa có hoạt chất</p>
                 }
-                @foreach (var tt in allTuongTac)
+                else
                 {
-                    var thuocKhac = tt.MaThuoc_A == Model.MaThuoc ? tt.ThuocB : tt.ThuocA;
-                    string severityClass = (tt.MucDoNghiemTrong?.ToLower().Contains("nghiêm") == true ||
-                                           tt.MucDoNghiemTrong?.ToLower().Contains("cao") == true)
-                                           ? "danger" : "warning";
-                    <div class="alert alert-@severityClass py-2 px-3 mb-2">
-                        <div class="d-flex justify-content-between">
-                            <strong><i class="fas fa-pills me-1"></i>@thuocKhac?.TenThuoc</strong>
-                            <span class="badge bg-@severityClass">@tt.MucDoNghiemTrong</span>
+                    foreach (var x in Model.ThuocHoatChats)
+                    {
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-semibold">
+                                @x.HoatChat?.TenHoatChat
+                            </span>
+
+                            @if (!string.IsNullOrEmpty(x.HamLuong))
+                            {
+                                <span class="badge bg-light text-dark border">
+                                    @x.HamLuong
+                                </span>
+                            }
                         </div>
-                        @if (!string.IsNullOrEmpty(tt.MoTaTuongTac))
-                        {
-                            <small>@tt.MoTaTuongTac</small>
-                        }
-                    </div>
+                    }
                 }
+
             </div>
         </div>
+
     </div>
+
+    <!-- ================= RIGHT ================= -->
+    <div class="col-lg-7">
+
+        <!-- CHỐNG CHỈ ĐỊNH -->
+        <div class="card border-0 shadow-sm mb-3">
+
+            <div class="card-header bg-danger text-white py-3">
+                <h6 class="mb-0">
+                    <i class="fas fa-ban me-2"></i>
+                    Chống chỉ định (@(Model.ChongChiDinhs?.Count ?? 0))
+                </h6>
+            </div>
+
+            <div class="card-body">
+
+                @if (Model.ChongChiDinhs == null || !Model.ChongChiDinhs.Any())
+                {
+                    <p class="text-muted mb-0">Không có dữ liệu</p>
+                }
+                else
+                {
+                    foreach (var x in Model.ChongChiDinhs)
+                    {
+                        <div class="alert alert-danger py-2 px-3 mb-2">
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>
+                                    @x.BenhNen?.TenBenhNen
+                                </strong>
+
+                                @if (!string.IsNullOrEmpty(x.MucDoNguyHiem))
+                                {
+                                    <span class="badge bg-danger">
+                                        @x.MucDoNguyHiem
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+
+        <!-- TƯƠNG TÁC -->
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-warning text-dark py-3">
+                <h6 class="mb-0">
+                    <i class="fas fa-exchange-alt me-2"></i>
+                    Tương tác (@tuongTacList.Count)
+                </h6>
+            </div>
+
+            <div class="card-body">
+
+                @if (!tuongTacList.Any())
+                {
+                    <p class="text-muted mb-0">Không có tương tác</p>
+                }
+                else
+                {
+                    foreach (var x in tuongTacList)
+                    {
+                        var thuocKhac =
+                            x.MaThuocA == Model.MaThuoc ? x.ThuocB : x.ThuocA;
+
+                        bool nguyHiem =
+                            x.MucDoNghiemTrong?.ToLower().Contains("cao") == true ||
+                            x.MucDoNghiemTrong?.ToLower().Contains("nghiêm") == true;
+
+                        string cls = nguyHiem ? "danger" : "warning";
+
+                        <div class="alert alert-@cls py-2 px-3 mb-2">
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>
+                                    <i class="fas fa-pills me-1"></i>
+                                    @thuocKhac?.TenThuoc
+                                </strong>
+
+                                <span class="badge bg-@cls">
+                                    @x.MucDoNghiemTrong
+                                </span>
+
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(x.MoTaTuongTac))
+                            {
+                                <small class="text-muted">
+                                    @x.MoTaTuongTac
+                                </small>
+                            }
+
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+
+    </div>
+
 </div>

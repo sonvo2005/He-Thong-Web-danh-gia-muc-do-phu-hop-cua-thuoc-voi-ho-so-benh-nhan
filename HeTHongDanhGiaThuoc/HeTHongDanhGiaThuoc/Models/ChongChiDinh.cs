@@ -8,17 +8,23 @@ namespace HeTHongDanhGiaThuoc.Models
         [Key]
         public int MaChongChiDinh { get; set; }
 
-        [Display(Name = "Thuốc")]
+        [Required]
         public int MaThuoc { get; set; }
 
-        [Required, MaxLength(200)]
-        [Display(Name = "Tên bệnh chống chỉ định")]
-        public string TenBenhChongChiDinh { get; set; } = string.Empty;
+        [Required]
+        public int MaBenhNen { get; set; }
+
+        [MaxLength(50)]
+        [Display(Name = "Mức độ nguy hiểm")]
+        public string? MucDoNguyHiem { get; set; }
 
         [Display(Name = "Ghi chú")]
         public string? GhiChu { get; set; }
 
-        [ForeignKey("MaThuoc")]
+        [ForeignKey(nameof(MaThuoc))]
         public Thuoc? Thuoc { get; set; }
+
+        [ForeignKey(nameof(MaBenhNen))]
+        public BenhNen? BenhNen { get; set; }
     }
 }

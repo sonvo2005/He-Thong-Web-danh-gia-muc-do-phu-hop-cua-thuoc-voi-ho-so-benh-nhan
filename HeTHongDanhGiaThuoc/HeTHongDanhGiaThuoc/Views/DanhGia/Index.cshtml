@@ -1,116 +1,216 @@
 @model IEnumerable<DanhGia>
+
 @{
     ViewData["Title"] = "Danh Sách Đánh Giá";
+
+    var list = Model?.ToList() ?? new List<DanhGia>();
 }
+
+<style>
+    /* Reset progress bar style */
+    .custom-progress {
+        height: 10px;
+        border-radius: 5px;
+        background-color: #e9ecef;
+        overflow: hidden;
+    }
+
+    .custom-progress-bar {
+        height: 100%;
+        border-radius: 5px;
+        width: 0% !important;
+        transition: width 0.8s ease-in-out;
+    }
+
+    .bar-high {
+        background-color: #28a745;
+    }
+
+    .bar-medium {
+        background-color: #ffc107;
+    }
+
+    .bar-low {
+        background-color: #dc3545;
+    }
+</style>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold text-primary mb-0">
-        <i class="fas fa-clipboard-check me-2"></i>Danh Sách Phiên Đánh Giá
+        <i class="fas fa-clipboard-check me-2"></i>
+        Danh Sách Phiên Đánh Giá
     </h4>
+
     <a asp-action="Create" class="btn btn-primary">
-        <i class="fas fa-plus me-1"></i>Tạo đánh giá mới
+        + Tạo đánh giá mới
     </a>
 </div>
 
-<div class="card border-0 shadow-sm mb-3">
-    <div class="card-body py-3">
+<!-- SEARCH -->
+<div class="card shadow-sm border-0 mb-3">
+    <div class="card-body">
         <form method="get" class="d-flex gap-2">
-            <input type="text" name="search" value="@ViewBag.Search"
-                   class="form-control" placeholder="Tìm theo tên hoặc mã bệnh nhân..." />
-            <button type="submit" class="btn btn-primary px-4"><i class="fas fa-search me-1"></i>Tìm</button>
+            <input name="search" value="@ViewBag.Search" class="form-control"
+                   placeholder="Tìm theo tên hoặc mã bệnh nhân..." />
+
+            <button class="btn btn-primary">Tìm</button>
+
             @if (!string.IsNullOrEmpty(ViewBag.Search?.ToString()))
             {
-                <a asp-action="Index" class="btn btn-outline-secondary">Xóa lọc</a>
+                <a asp-action="Index" class="btn btn-outline-secondary">Reset</a>
             }
         </form>
     </div>
 </div>
 
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white py-3">
-        <span class="text-muted small">Tổng: <strong>@ViewBag.Total</strong> phiên đánh giá</span>
+<!-- TABLE -->
+<div class="card shadow-sm border-0">
+
+    <div class="card-header bg-white">
+        Tổng: <b>@ViewBag.Total</b> phiên đánh giá
     </div>
+
     <div class="table-responsive">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover align-middle mb-0">
+
             <thead class="table-light">
                 <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th>Bệnh nhân</th>
                     <th>Người đánh giá</th>
-                    <th>Ngày đánh giá</th>
-                    <th>Số thuốc</th>
-                    <th>Tỷ lệ phù hợp</th>
+                    <th>Ngày</th>
+                    <th>Thuốc</th>
+                    <th style="min-width: 180px;">Mức phù hợp</th>
                     <th>Trạng thái</th>
                     <th class="text-center">Thao tác</th>
                 </tr>
             </thead>
+
             <tbody>
-                @if (!Model.Any())
+
+                @if (!list.Any())
                 {
-                    <tr><td colspan="8" class="text-center text-muted py-4">
-                        <i class="fas fa-inbox fa-2x mb-2 d-block opacity-25"></i>
-                        Chưa có phiên đánh giá nào
-                    </td></tr>
-                }
-                @foreach (var item in Model)
-                {
-                    decimal tyle = item.TyLePhuHop ?? 0;
-                    string badgeClass = tyle >= 80 ? "bg-success" : tyle >= 50 ? "bg-warning text-dark" : "bg-danger";
-                    string statusText = tyle >= 80 ? "Phù hợp" : tyle >= 50 ? "Cần xem xét" : "Không phù hợp";
                     <tr>
-                        <td class="text-muted">@item.MaDanhGia</td>
-                        <td>
-                            <span class="fw-semibold">@item.HoSoBenhNhan?.HoTen</span><br />
-                            <small class="text-muted">@item.HoSoBenhNhan?.MaDinhDanhBenhNhan</small>
-                        </td>
-                        <td class="text-muted">@item.NguoiDanhGia?.HoTen</td>
-                        <td class="text-muted">@item.NgayDanhGia.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td class="text-center">
-                            <span class="badge bg-secondary">@item.ChiTietDanhGias.Count</span>
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="progress flex-grow-1" style="height:8px">
-                                    <div class="progress-bar @badgeClass" style="width:@tyle%"></div>
-                                </div>
-                                <span class="small fw-semibold">@tyle%</span>
-                            </div>
-                        </td>
-                        <td><span class="badge @badgeClass">@statusText</span></td>
-                        <td class="text-center">
-                            <a asp-action="KetQua" asp-route-id="@item.MaDanhGia"
-                               class="btn btn-sm btn-outline-primary" title="Xem kết quả">
-                                <i class="fas fa-chart-pie"></i>
-                            </a>
-                            @if (User.IsInRole("Admin") || User.IsInRole("Bác sĩ"))
-                            {
-                                <form asp-action="Delete" asp-route-id="@item.MaDanhGia" method="post" class="d-inline"
-                                      onsubmit="return confirm('Xác nhận xóa phiên đánh giá này?')">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            }
+                        <td colspan="8" class="text-center text-muted py-4">
+                            Chưa có dữ liệu
                         </td>
                     </tr>
                 }
+                else
+                {
+                    foreach (var item in list)
+                    {
+                        var tyLe = item.TyLePhuHop ?? 0;
+                        var soThuoc = item.ChiTietDanhGias?.Count ?? 0;
+
+                        var barClass = tyLe >= 80 ? "bar-high" : tyLe >= 50 ? "bar-medium" : "bar-low";
+
+                        var status = tyLe switch
+                        {
+                            >= 80 => ("Phù hợp", "bg-success"),
+                            >= 50 => ("Cân nhắc", "bg-warning text-dark"),
+                            _ => ("Không phù hợp", "bg-danger")
+                        };
+
+                        <tr>
+                            <td class="text-muted">@item.MaDanhGia</td>
+
+                            <td>
+                                <div class="fw-semibold">@item.HoSoBenhNhan?.HoTen</div>
+                                <small class="text-muted">
+                                    @item.HoSoBenhNhan?.MaDinhDanhBenhNhan
+                                </small>
+                            </td>
+
+                            <td>@item.NguoiDanhGia?.HoTen</td>
+
+                            <td class="text-muted">
+                                @item.NgayDanhGia.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+
+                            <td>
+                                <span class="badge bg-secondary">
+                                    @soThuoc
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="custom-progress flex-grow-1">
+                                        <div class="custom-progress-bar @barClass" data-percent="@tyLe">
+                                        </div>
+                                    </div>
+                                    <small class="fw-bold" style="min-width: 40px;">@tyLe%</small>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="badge @status.Item2">
+                                    @status.Item1
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+                                <a asp-action="KetQua" asp-route-id="@item.MaDanhGia" class="btn btn-sm btn-outline-primary">
+                                    Xem
+                                </a>
+
+                                @if (User.IsInRole("Admin") || User.IsInRole("Bác sĩ"))
+                                {
+                                    <form asp-action="Delete" asp-route-id="@item.MaDanhGia" method="post" class="d-inline"
+                                          onsubmit="return confirm('Xóa?')">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            Xóa
+                                        </button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+
             </tbody>
         </table>
     </div>
+
+    <!-- PAGING -->
     @if ((int)ViewBag.TotalPages > 1)
     {
         <div class="card-footer bg-white d-flex justify-content-center">
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
-                    {
-                        <li class="page-item @(i == (int)ViewBag.CurrentPage ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-search="@ViewBag.Search">@i</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
+            <ul class="pagination pagination-sm mb-0">
+
+                @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == (int)ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-search="@ViewBag.Search">
+                            @i
+                        </a>
+                    </li>
+                }
+
+            </ul>
         </div>
     }
+
 </div>
+
+@section Scripts {
+    <script>
+        // Animation cho progress bar
+        (function () {
+            var bars = document.querySelectorAll('.custom-progress-bar');
+
+            bars.forEach(function (bar) {
+                var percent = bar.getAttribute('data-percent');
+
+                // Delay để đảm bảo CSS đã load
+                setTimeout(function () {
+                    bar.style.width = percent + '%';
+                }, 200);
+            });
+        })();
+    </script>
+}

@@ -1,134 +1,394 @@
 @{
     ViewData["Title"] = "Tạo Phiên Đánh Giá";
-    var benhNhans = ViewBag.BenhNhans as List<HoSoBenhNhan>;
-    var thuocs = ViewBag.Thuocs as List<Thuoc>;
+
+    var benhNhans = ViewBag.BenhNhans as List<HoSoBenhNhan> ?? new();
+    var thuocs = ViewBag.Thuocs as List<Thuoc> ?? new();
     var benhNhanChon = ViewBag.BenhNhanChon as HoSoBenhNhan;
 }
 
+<style>
+    .thuoc-info-card {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 10px;
+        border-left: 4px solid #0d6efd;
+        font-size: 0.9rem;
+    }
+
+    .thuoc-info-card .info-title {
+        font-weight: 600;
+        color: #0d6efd;
+        font-size: 0.95rem;
+    }
+
+    .thuoc-info-card .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 0;
+        border-bottom: 1px dashed #dee2e6;
+    }
+
+    .thuoc-info-card .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .thuoc-info-card .info-label {
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .thuoc-info-card .info-value {
+        color: #212529;
+        text-align: right;
+    }
+
+    .badge-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+    }
+
+    .section-title {
+        font-weight: 600;
+        margin-top: 8px;
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .section-title i {
+        font-size: 0.8rem;
+    }
+
+    .thuoc-row {
+        background: #ffffff;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 12px;
+        transition: all 0.2s ease;
+    }
+
+    .thuoc-row:hover {
+        border-color: #0d6efd;
+        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.1);
+    }
+
+    .thuoc-row.border-warning {
+        border-color: #ffc107 !important;
+        background-color: #fff8e1 !important;
+    }
+
+    .thuoc-row.border-danger {
+        border-color: #dc3545 !important;
+        background-color: #ffe5e5 !important;
+    }
+
+    .thuoc-row.border-success {
+        border-color: #198754 !important;
+        background-color: #eafaf1 !important;
+    }
+
+    .patient-info-table td {
+        padding: 6px 8px;
+        vertical-align: middle;
+    }
+
+    .patient-info-table td:first-child {
+        font-weight: 500;
+        color: #495057;
+        width: 35%;
+    }
+
+    .btn-delete-drug {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    .form-label-sm {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #495057;
+        margin-bottom: 4px;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .text-warning {
+        color: #ffc107 !important;
+    }
+
+    .text-success {
+        color: #198754 !important;
+    }
+</style>
+
 <div class="d-flex align-items-center mb-4">
-    <a asp-action="Index" class="btn btn-outline-secondary me-3"><i class="fas fa-arrow-left"></i></a>
+    <a asp-action="Index" class="btn btn-outline-secondary me-3">
+        <i class="fas fa-arrow-left"></i>
+    </a>
     <h4 class="fw-bold text-primary mb-0">
-        <i class="fas fa-clipboard-check me-2"></i>Tạo Phiên Đánh Giá Thuốc
+        <i class="fas fa-clipboard-check me-2"></i>
+        Tạo Phiên Đánh Giá Thuốc
     </h4>
 </div>
 
 <form asp-action="Create" method="post" id="frmDanhGia">
     @Html.AntiForgeryToken()
-    <div class="row g-3">
-        <!-- Chọn bệnh nhân -->
+
+    <div class="row g-4">
+
+        <!-- LEFT COLUMN -->
         <div class="col-lg-5">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-primary text-white py-3">
-                    <h6 class="mb-0"><i class="fas fa-user me-2"></i>Bước 1: Chọn bệnh nhân</h6>
+
+            <!-- CHỌN BỆNH NHÂN -->
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="fas fa-user-check me-2"></i> Bước 1: Chọn bệnh nhân
                 </div>
                 <div class="card-body">
-                    <select name="maBenhNhan" id="selBenhNhan" class="form-select mb-3" required onchange="loadBenhNhan(this.value)">
+                    <select name="maBenhNhan" class="form-select mb-3" onchange="loadBenhNhan(this.value)">
                         <option value="">-- Chọn bệnh nhân --</option>
-                        @if (benhNhans != null)
+                        @foreach (var bn in benhNhans)
                         {
-                            foreach (var bn in benhNhans)
-                            {
-                                bool selected = benhNhanChon?.MaBenhNhan == bn.MaBenhNhan;
-
-                                if (selected)
-                                {
-                                    <option value="@bn.MaBenhNhan" selected>
-                                        @bn.HoTen (@bn.MaDinhDanhBenhNhan)
-                                    </option>
-                                }
-                                else
-                                {
-                                    <option value="@bn.MaBenhNhan">
-                                        @bn.HoTen (@bn.MaDinhDanhBenhNhan)
-                                    </option>
-                                }
-                            }
+                            <option value="@bn.MaBenhNhan" selected="@(benhNhanChon?.MaBenhNhan == bn.MaBenhNhan)">
+                                @bn.HoTen (@bn.MaDinhDanhBenhNhan)
+                            </option>
                         }
                     </select>
 
-                    <div id="infoBenhNhan">
-                        @if (benhNhanChon != null)
-                        {
-                            <div class="alert alert-light border p-3">
-                                <strong>@benhNhanChon.HoTen</strong><br />
-                                <small class="text-muted">@benhNhanChon.GioiTinh | @benhNhanChon.NgaySinh?.ToString("dd/MM/yyyy")</small>
+                    @if (benhNhanChon != null)
+                    {
+                        <div class="alert alert-light border rounded-3 p-3">
+                            <h5 class="fw-bold text-primary mb-3">
+                                <i class="fas fa-user-injured me-2"></i>@benhNhanChon.HoTen
+                            </h5>
 
-                                @if (benhNhanChon.BenhNens.Any())
+                            <table class="table table-sm patient-info-table mb-3">
+                                <tr>
+                                    <td>Mã bệnh nhân</td>
+                                    <td><span class="badge bg-secondary">@benhNhanChon.MaDinhDanhBenhNhan</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Giới tính</td>
+                                    <td>@benhNhanChon.GioiTinh</td>
+                                </tr>
+                                <tr>
+                                    <td>Ngày sinh</td>
+                                    <td>@benhNhanChon.NgaySinh?.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                                <tr>
+                                    <td>Tuổi</td>
+                                    <td><span class="badge bg-info text-dark">@benhNhanChon.Tuoi tuổi</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Cân nặng</td>
+                                    <td>@benhNhanChon.CanNang kg</td>
+                                </tr>
+                                <tr>
+                                    <td>Chiều cao</td>
+                                    <td>@benhNhanChon.ChieuCao cm</td>
+                                </tr>
+                                <tr>
+                                    <td>Nhóm máu</td>
+                                    <td><span class="badge bg-danger">@benhNhanChon.NhomMau</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Địa chỉ</td>
+                                    <td>@benhNhanChon.DiaChi</td>
+                                </tr>
+                                <tr>
+                                    <td>Ngày tiếp nhận</td>
+                                    <td>@benhNhanChon.NgayTiepNhan.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                            </table>
+
+                            @if (!string.IsNullOrWhiteSpace(benhNhanChon.BenhHienTai))
+                            {
+                                <div class="alert alert-info mb-3 py-2 px-3">
+                                    <div class="fw-bold mb-1 small">
+                                        <i class="fas fa-notes-medical me-1"></i>Bệnh hiện tại
+                                    </div>
+                                    <span class="small">@benhNhanChon.BenhHienTai</span>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(benhNhanChon.GhiChu))
+                            {
+                                <div class="alert alert-secondary mb-3 py-2 px-3">
+                                    <div class="fw-bold mb-1 small">
+                                        <i class="fas fa-sticky-note me-1"></i>Ghi chú bệnh nhân
+                                    </div>
+                                    <span class="small">@benhNhanChon.GhiChu</span>
+                                </div>
+                            }
+
+                            <!-- BỆNH NỀN -->
+                            <div class="mb-3">
+                                <div class="section-title text-warning">
+                                    <i class="fas fa-heartbeat me-1"></i> Bệnh nền
+                                </div>
+                                @if (benhNhanChon.BenhNhanBenhNens != null && benhNhanChon.BenhNhanBenhNens.Any())
                                 {
-                                    <hr class="my-2" />
-                                    <p class="mb-1 fw-semibold text-warning"><i class="fas fa-disease me-1"></i>Bệnh nền:</p>
-                                    @foreach (var bn in benhNhanChon.BenhNens)
-                                    {
-                                        <span class="badge bg-warning text-dark me-1 mb-1">@bn.TenBenhNen</span>
-                                    }
+                                    <div class="badge-section">
+                                        @foreach (var b in benhNhanChon.BenhNhanBenhNens)
+                                        {
+                                            <span class="badge bg-warning text-dark">@b.BenhNen?.TenBenhNen</span>
+                                        }
+                                    </div>
                                 }
-
-                                @if (benhNhanChon.DiUngThuocs.Any())
+                                else
                                 {
-                                    <hr class="my-2" />
-                                    <p class="mb-1 fw-semibold text-danger"><i class="fas fa-allergies me-1"></i>Dị ứng:</p>
-                                    @foreach (var du in benhNhanChon.DiUngThuocs)
-                                    {
-                                        <span class="badge bg-danger me-1 mb-1">@du.HoatChat?.TenHoatChat</span>
-                                    }
+                                    <small class="text-muted">Không có bệnh nền</small>
                                 }
                             </div>
-                        }
-                        else
-                        {
-                            <div class="text-center text-muted py-3" id="placeholderBenhNhan">
-                                <i class="fas fa-user-circle fa-3x mb-2 opacity-25"></i>
-                                <p>Chọn bệnh nhân để xem thông tin</p>
+
+                            <!-- DỊ ỨNG -->
+                            <div class="mb-3">
+                                <div class="section-title text-danger">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> Dị ứng thuốc / hoạt chất
+                                </div>
+                                @if (benhNhanChon.DiUngThuocs != null && benhNhanChon.DiUngThuocs.Any())
+                                {
+                                    <div class="badge-section">
+                                        @foreach (var d in benhNhanChon.DiUngThuocs)
+                                        {
+                                            <span class="badge bg-danger">
+                                                @d.HoatChat?.TenHoatChat (@d.MucDoDiUng)
+                                            </span>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <small class="text-muted">Không ghi nhận dị ứng</small>
+                                }
                             </div>
-                        }
-                    </div>
+
+                            <!-- THUỐC ĐANG SỬ DỤNG -->
+                            <div>
+                                <div class="section-title text-primary">
+                                    <i class="fas fa-pills me-1"></i> Thuốc đang sử dụng
+                                </div>
+                                @if (benhNhanChon.ThuocDangSuDungs != null && benhNhanChon.ThuocDangSuDungs.Any())
+                                {
+                                    <table class="table table-sm table-bordered small mb-0">
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>Thuốc</th>
+                                                <th>Liều dùng</th>
+                                                <th>Bắt đầu</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in benhNhanChon.ThuocDangSuDungs)
+                                            {
+                                                <tr>
+                                                    <td>@item.Thuoc?.TenThuoc</td>
+                                                    <td>@item.LieuDung</td>
+                                                    <td>@item.NgayBatDau?.ToString("dd/MM/yyyy")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <small class="text-muted">Không có thuốc đang sử dụng</small>
+                                }
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
 
-            <!-- Ghi chú -->
-            <div class="card border-0 shadow-sm mt-3">
-                <div class="card-header bg-light py-3">
-                    <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Ghi chú phiên đánh giá</h6>
+            <!-- GHI CHÚ -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="fas fa-pen me-2"></i> Ghi chú phiên đánh giá
                 </div>
                 <div class="card-body">
-                    <textarea name="ghiChu" class="form-control" rows="3" placeholder="Ghi chú thêm..."></textarea>
+                    <textarea name="ghiChu" class="form-control" rows="3"
+                              placeholder="Nhập ghi chú cho phiên đánh giá này..."></textarea>
                 </div>
             </div>
         </div>
 
-        <!-- Chọn thuốc -->
+        <!-- RIGHT COLUMN -->
         <div class="col-lg-7">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-success text-white py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0"><i class="fas fa-pills me-2"></i>Bước 2: Chọn thuốc cần đánh giá</h6>
-                    <button type="button" class="btn btn-sm btn-light text-success" onclick="themDong()">
-                        <i class="fas fa-plus me-1"></i>Thêm thuốc
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-prescription me-2"></i> Bước 2: Chọn thuốc đánh giá</span>
+                    <button type="button" class="btn btn-sm btn-light text-success fw-bold" onclick="themDong()">
+                        <i class="fas fa-plus-circle me-1"></i> Thêm thuốc
                     </button>
                 </div>
                 <div class="card-body" id="dsThuoc">
-                    <!-- Row thuốc ban đầu -->
-                    <div class="thuoc-row border rounded p-3 mb-2 bg-light">
-                        <div class="row g-2 align-items-center">
-                            <div class="col-7">
-                                <label class="form-label small fw-semibold">Thuốc</label>
-                                <select name="maThuocs" class="form-select">
-                                    <option value="0">-- Chọn thuốc --</option>
-                                    @if (thuocs != null)
+                    <!-- ROW TEMPLATE -->
+                    <div class="thuoc-row">
+                        <div class="row g-3">
+                            <div class="col-md-7">
+                                <label class="form-label-sm">Chọn thuốc</label>
+                                <select name="maThuocs" class="form-select thuoc-select"
+                                        onchange="hienThiThongTinThuoc(this)">
+                                    <option value="">-- Chọn thuốc --</option>
+                                    @foreach (var t in thuocs)
                                     {
-                                        foreach (var t in thuocs)
-                                        {
-                                            <option value="@t.MaThuoc">@t.TenThuoc (@t.DangBaoChe)</option>
-                                        }
+                                        var hoatChats = string.Join(", ",
+                                            t.ThuocHoatChats.Select(x =>
+                                                $"{x.HoatChat?.TenHoatChat} ({x.HamLuong})"));
+
+                                        var chongChiDinhs = string.Join(", ",
+                                            t.ChongChiDinhs.Select(x =>
+                                                $"{x.BenhNen?.TenBenhNen} [{x.MucDoNguyHiem}]"));
+
+                                        var tuongTacA = t.TuongTacA.Select(x =>
+                                            $"{x.ThuocB?.TenThuoc} [{x.MucDoNghiemTrong}]");
+
+                                        var tuongTacB = t.TuongTacB.Select(x =>
+                                            $"{x.ThuocA?.TenThuoc} [{x.MucDoNghiemTrong}]");
+
+                                        var tuongTacs = string.Join(", ",
+                                            tuongTacA.Concat(tuongTacB));
+
+                                        <option value="@t.MaThuoc" data-ten="@t.TenThuoc" data-bietduoc="@t.TenBietDuoc"
+                                                data-dang="@t.DangBaoChe" data-lieuchuan="@t.LieuDungChuan"
+                                                data-hoatchat="@hoatChats" data-ccd="@chongChiDinhs" data-tt="@tuongTacs">
+                                            @t.TenThuoc (@t.DangBaoChe)
+                                        </option>
                                     }
                                 </select>
+                                <div class="thuoc-info mt-3"></div>
                             </div>
-                            <div class="col-4">
-                                <label class="form-label small fw-semibold">Liều dùng chỉ định</label>
-                                <input type="text" name="lieuDungs" class="form-control" placeholder="VD: 500mg 2 lần/ngày" />
+
+                            <div class="col-md-2">
+                                <label class="form-label-sm">Liều (mg)</label>
+                                <input name="lieuMgs" type="number" step="0.1" min="0" class="form-control lieu-input"
+                                       placeholder="VD: 500" />
                             </div>
-                            <div class="col-1 pt-4">
-                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="xoaDong(this)">
-                                    <i class="fas fa-times"></i>
+
+                            <div class="col-md-2">
+                                <label class="form-label-sm">Số lần/ngày</label>
+                                <input name="soLanMoiNgays" type="number" min="1" class="form-control lan-input"
+                                       placeholder="VD: 3" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label-sm">Ghi chú sử dụng</label>
+                                <input name="lieuDungs" class="form-control"
+                                       placeholder="VD: Sau ăn, sáng - trưa - tối" />
+                            </div>
+
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="button" class="btn btn-outline-danger btn-sm w-100 btn-delete-drug"
+                                        onclick="xoaDong(this)">
+                                    <i class="fas fa-trash-alt me-1"></i> Xóa
                                 </button>
                             </div>
                         </div>
@@ -136,9 +396,9 @@
                 </div>
             </div>
 
-            <div class="mt-3 text-end">
-                <button type="submit" class="btn btn-primary btn-lg px-5">
-                    <i class="fas fa-magic me-2"></i>Chạy đánh giá
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                    <i class="fas fa-play-circle me-2"></i> Chạy đánh giá
                 </button>
             </div>
         </div>
@@ -146,48 +406,443 @@
 </form>
 
 @section Scripts {
-<script>
-function themDong() {
-    const container = document.getElementById('dsThuoc');
-    const thuocOptions = `@if (thuocs != null) { foreach (var t in thuocs) { @("<option value='" + t.MaThuoc + "'>" + t.TenThuoc + " (" + t.DangBaoChe + ")</option>") } }`;
-    const div = document.createElement('div');
-    div.className = 'thuoc-row border rounded p-3 mb-2 bg-light';
-    div.innerHTML = `
-        <div class="row g-2 align-items-center">
-            <div class="col-7">
-                <label class="form-label small fw-semibold">Thuốc</label>
-                <select name="maThuocs" class="form-select">
-                    <option value="0">-- Chọn thuốc --</option>
-                    ${getAllThuocOptions()}
-                </select>
-            </div>
-            <div class="col-4">
-                <label class="form-label small fw-semibold">Liều dùng</label>
-                <input type="text" name="lieuDungs" class="form-control" placeholder="VD: 500mg 2 lần/ngày" />
-            </div>
-            <div class="col-1 pt-4">
-                <button type="button" class="btn btn-sm btn-outline-danger" onclick="xoaDong(this)">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+    <script>
+        // ========================================
+        // THUOC MAP - Dữ liệu thuốc từ server
+        // ========================================
+        const thuocMap = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                            thuocs.ToDictionary(t => t.MaThuoc, t => new
+                        {
+                            ten = t.TenThuoc,
+                                    bietDuoc = t.TenBietDuoc,
+                                    dang = t.DangBaoChe,
+                                    lieuChuan = t.LieuDungChuan,
+
+                            // Liều cơ bản (mg/lần)
+                                    lieuToiThieu = t.LieuToiThieuMg,
+                                    lieuToiDa = t.LieuToiDaMg,
+                                    lieuKhuyenNghi = t.LieuKhuyenNghiMg,
+
+                            // Tần suất (lần/ngày)
+                                    tanSuatToiDa = t.TanSuatToiDaMoiNgay,
+
+                            // Tổng liều/ngày (mg/ngày)
+                                    tongLieuToiThieuNgay = (t.LieuToiThieuMg ?? 0) * (t.TanSuatToiDaMoiNgay ?? 0),
+                                    tongLieuKhuyenNghiNgay = (t.LieuKhuyenNghiMg ?? 0) * (t.TanSuatToiDaMoiNgay ?? 0),
+                                    tongLieuToiDaNgay = (t.LieuToiDaMg ?? 0) * (t.TanSuatToiDaMoiNgay ?? 0),
+
+                            // Hoạt chất
+                                    hoatChat = t.ThuocHoatChats.Select(x => new
+                            {
+                                ten = x.HoatChat!.TenHoatChat,
+                                            hamLuong = x.HamLuong
+                            }),
+
+                            // Chống chỉ định
+                                    chongChiDinh = t.ChongChiDinhs.Select(x => new
+                            {
+                                            benh = x.BenhNen!.TenBenhNen,
+                                            mucDo = x.MucDoNguyHiem
+                            }),
+
+                            // Tương tác thuốc
+                                    tuongTac = t.TuongTacA.Select(x => new
+                            {
+                                ten = x.ThuocB!.TenThuoc,
+                                            mucDo = x.MucDoNghiemTrong
+                                    }).Concat(t.TuongTacB.Select(x => new
+                            {
+                                ten = x.ThuocA!.TenThuoc,
+                                            mucDo = x.MucDoNghiemTrong
+                            }))
+                        })
+                    ));
+
+        // ========================================
+        // HÀM HIỂN THỊ THÔNG TIN THUỐC
+        // ========================================
+        function hienThiThongTinThuoc(select) {
+            const id = select.value;
+            const row = select.closest(".thuoc-row");
+            const box = row.querySelector(".thuoc-info");
+
+            if (!id || !thuocMap[id]) {
+                box.innerHTML = `
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Chọn thuốc để xem chi tiết
+                </small>`;
+                return;
+            }
+
+            const t = thuocMap[id];
+
+            // Lấy giá trị liều và số lần hiện tại
+            const lieuValue = parseFloat(row.querySelector(".lieu-input")?.value || 0);
+            const lanValue = parseInt(row.querySelector(".lan-input")?.value || 0);
+            const tongNgay = lieuValue * lanValue;
+
+            let html = `<div class="thuoc-info-card">`;
+
+            // ========== THÔNG TIN CƠ BẢN ==========
+            html += `<div class="info-title mb-2">
+            <i class="fas fa-capsules me-1"></i>${t.ten}
         </div>`;
-    container.appendChild(div);
-}
 
-function getAllThuocOptions() {
-    const firstSelect = document.querySelector('select[name="maThuocs"]');
-    if (firstSelect) return firstSelect.innerHTML;
-    return '';
-}
+            html += `<div class="info-row">
+            <span class="info-label">Biệt dược</span>
+            <span class="info-value">${t.bietDuoc ?? "-"}</span>
+        </div>`;
 
-function xoaDong(btn) {
-    const rows = document.querySelectorAll('.thuoc-row');
-    if (rows.length > 1) btn.closest('.thuoc-row').remove();
-}
+            html += `<div class="info-row">
+            <span class="info-label">Dạng bào chế</span>
+            <span class="info-value">${t.dang ?? "-"}</span>
+        </div>`;
 
-function loadBenhNhan(id) {
-    if (!id) return;
-    window.location.href = '/DanhGia/Create?maBenhNhan=' + id;
-}
-</script>
+            html += `<div class="info-row">
+            <span class="info-label">Liều chuẩn</span>
+            <span class="info-value">${t.lieuChuan ?? "-"}</span>
+        </div>`;
+
+            // ========== LIỀU MỖI LẦN ==========
+            html += `<div class="section-title text-primary mt-2">
+            <i class="fas fa-vial"></i> Liều dùng mỗi lần
+        </div>`;
+
+            // Tối thiểu
+            let lieuToiThieuClass = '';
+            let lieuToiThieuIcon = '';
+            if (lieuValue > 0 && t.lieuToiThieu) {
+                if (lieuValue < t.lieuToiThieu) {
+                    lieuToiThieuClass = 'text-danger fw-bold';
+                    lieuToiThieuIcon = ' ⚠️';
+                } else {
+                    lieuToiThieuClass = 'text-success';
+                    lieuToiThieuIcon = ' ✓';
+                }
+            }
+            html += `<div class="info-row">
+            <span class="info-label">Tối thiểu</span>
+            <span class="info-value ${lieuToiThieuClass}">${t.lieuToiThieu ?? "-"} mg${lieuToiThieuIcon}</span>
+        </div>`;
+
+            // Khuyến nghị
+            let lieuKhuyenNghiClass = '';
+            let lieuKhuyenNghiIcon = '';
+            if (lieuValue > 0 && t.lieuKhuyenNghi) {
+                if (lieuValue < t.lieuKhuyenNghi) {
+                    lieuKhuyenNghiClass = 'text-warning fw-bold';
+                    lieuKhuyenNghiIcon = ' ⚡';
+                } else if (lieuValue === t.lieuKhuyenNghi) {
+                    lieuKhuyenNghiClass = 'text-success';
+                    lieuKhuyenNghiIcon = ' ✓';
+                } else if (lieuValue > t.lieuKhuyenNghi) {
+                    lieuKhuyenNghiClass = 'text-warning fw-bold';
+                    lieuKhuyenNghiIcon = ' ⚡';
+                }
+            }
+            html += `<div class="info-row">
+            <span class="info-label">Khuyến nghị</span>
+            <span class="info-value ${lieuKhuyenNghiClass}">${t.lieuKhuyenNghi ?? "-"} mg${lieuKhuyenNghiIcon}</span>
+        </div>`;
+
+            // Tối đa
+            let lieuToiDaClass = '';
+            let lieuToiDaIcon = '';
+            if (lieuValue > 0 && t.lieuToiDa) {
+                if (lieuValue > t.lieuToiDa) {
+                    lieuToiDaClass = 'text-danger fw-bold';
+                    lieuToiDaIcon = ' 🚫';
+                } else {
+                    lieuToiDaClass = 'text-success';
+                    lieuToiDaIcon = ' ✓';
+                }
+            }
+            html += `<div class="info-row">
+            <span class="info-label">Tối đa</span>
+            <span class="info-value ${lieuToiDaClass}">${t.lieuToiDa ?? "-"} mg${lieuToiDaIcon}</span>
+        </div>`;
+
+            // ========== TẦN SUẤT ==========
+            html += `<div class="info-title mt-3">📅 Tần suất sử dụng</div>`;
+
+            // Tối đa lần/ngày
+            let tanSuatClass = '';
+            let tanSuatIcon = '';
+            if (lanValue > 0 && t.tanSuatToiDa) {
+                if (lanValue > t.tanSuatToiDa) {
+                    tanSuatClass = 'text-danger fw-bold';
+                    tanSuatIcon = ' 🚫';
+                } else {
+                    tanSuatClass = 'text-success';
+                    tanSuatIcon = ' ✓';
+                }
+            }
+            html += `<div class="info-row">
+            <span class="info-label">Tối đa lần/ngày</span>
+            <span class="info-value ${tanSuatClass}">${t.tanSuatToiDa ?? "-"} lần${tanSuatIcon}</span>
+        </div>`;
+
+            // ========== TỔNG LIỀU/NGÀY ==========
+            html += `<div class="info-title mt-3">📊 Tổng liều/ngày</div>`;
+
+            // Tổng tối thiểu
+            let tongToiThieuClass = '';
+            let tongToiThieuIcon = '';
+            if (tongNgay > 0 && t.tongLieuToiThieuNgay) {
+                if (tongNgay < t.tongLieuToiThieuNgay) {
+                    tongToiThieuClass = 'text-danger fw-bold';
+                    tongToiThieuIcon = ' ⚠️';
+                } else {
+                    tongToiThieuClass = 'text-success';
+                    tongToiThieuIcon = ' ✓';
+                }
+            }
+            html += `<div class="info-row">
+            <span class="info-label">Tối thiểu</span>
+            <span class="info-value ${tongToiThieuClass}">${t.tongLieuToiThieuNgay} mg/ngày${tongToiThieuIcon}</span>
+        </div>`;
+
+            // Tổng khuyến nghị
+            let tongKhuyenNghiClass = '';
+            let tongKhuyenNghiIcon = '';
+            if (tongNgay > 0 && t.tongLieuKhuyenNghiNgay) {
+                if (tongNgay < t.tongLieuKhuyenNghiNgay) {
+                    tongKhuyenNghiClass = 'text-warning fw-bold';
+                    tongKhuyenNghiIcon = ' ⚡';
+                } else if (tongNgay === t.tongLieuKhuyenNghiNgay) {
+                    tongKhuyenNghiClass = 'text-success';
+                    tongKhuyenNghiIcon = ' ✓';
+                } else if (tongNgay > t.tongLieuKhuyenNghiNgay) {
+                    tongKhuyenNghiClass = 'text-warning fw-bold';
+                    tongKhuyenNghiIcon = ' ⚡';
+                }
+            }
+            html += `<div class="info-row">
+            <span class="info-label">Khuyến nghị</span>
+            <span class="info-value ${tongKhuyenNghiClass}">${t.tongLieuKhuyenNghiNgay} mg/ngày${tongKhuyenNghiIcon}</span>
+        </div>`;
+
+            // Tổng tối đa
+            let tongToiDaClass = '';
+            let tongToiDaIcon = '';
+            if (tongNgay > 0 && t.tongLieuToiDaNgay) {
+                if (tongNgay > t.tongLieuToiDaNgay) {
+                    tongToiDaClass = 'text-danger fw-bold';
+                    tongToiDaIcon = ' 🚫';
+                } else {
+                    tongToiDaClass = 'text-success';
+                    tongToiDaIcon = ' ✓';
+                }
+            }
+            html += `<div class="info-row">
+            <span class="info-label">Tối đa</span>
+            <span class="info-value ${tongToiDaClass}">${t.tongLieuToiDaNgay} mg/ngày${tongToiDaIcon}</span>
+        </div>`;
+
+            // ========== HOẠT CHẤT ==========
+            if (t.hoatChat?.length) {
+                html += `<div class="section-title text-success mt-3">
+                <i class="fas fa-atom"></i> Hoạt chất
+            </div>`;
+                html += `<div class="badge-section">`;
+                t.hoatChat.forEach(h => {
+                    html += `<span class="badge bg-success">${h.ten} ${h.hamLuong ?? ""}</span>`;
+                });
+                html += `</div>`;
+            }
+
+            // ========== CHỐNG CHỈ ĐỊNH ==========
+            if (t.chongChiDinh?.length) {
+                html += `<div class="section-title text-danger mt-3">
+                <i class="fas fa-ban"></i> Chống chỉ định
+            </div>`;
+                t.chongChiDinh.forEach(c => {
+                    html += `<div class="text-danger small ps-2">
+                    • ${c.benh}
+                    <span class="badge bg-danger ms-1">${c.mucDo ?? "?"}</span>
+                </div>`;
+                });
+            }
+
+            // ========== TƯƠNG TÁC THUỐC ==========
+            if (t.tuongTac?.length) {
+                html += `<div class="section-title text-warning mt-3">
+                <i class="fas fa-exclamation-triangle"></i> Tương tác thuốc
+            </div>`;
+                t.tuongTac.forEach(i => {
+                    html += `<div class="text-warning small ps-2">
+                    • ${i.ten}
+                    <span class="badge bg-warning text-dark ms-1">${i.mucDo ?? "?"}</span>
+                </div>`;
+                });
+            }
+
+            html += `</div>`;
+            box.innerHTML = html;
+
+            // Bind events cho inputs
+            bindInputEvents(row, select);
+
+            // Check liều ngay lập tức
+            checkLieuByRow(row);
+        }
+
+        // ========================================
+        // BIND INPUT EVENTS
+        // ========================================
+        function bindInputEvents(row, select) {
+            const lieuInput = row.querySelector(".lieu-input");
+            const lanInput = row.querySelector(".lan-input");
+
+            if (lieuInput && !lieuInput.dataset.bound) {
+                lieuInput.addEventListener("input", function () {
+                    checkLieuByRow(row);
+                    hienThiThongTinThuoc(select);
+                });
+                lieuInput.dataset.bound = "1";
+            }
+
+            if (lanInput && !lanInput.dataset.bound) {
+                lanInput.addEventListener("input", function () {
+                    checkLieuByRow(row);
+                    hienThiThongTinThuoc(select);
+                });
+                lanInput.dataset.bound = "1";
+            }
+        }
+
+        // ========================================
+        // CHECK LIỀU VÀ HIỂN THỊ MÀU BORDER
+        // ========================================
+        function checkLieuByRow(row) {
+            const select = row.querySelector(".thuoc-select");
+            const id = select.value;
+
+            if (!id || !thuocMap[id]) return;
+
+            const t = thuocMap[id];
+
+            const lieu = parseFloat(row.querySelector(".lieu-input")?.value || 0);
+            const lan = parseInt(row.querySelector(".lan-input")?.value || 0);
+            const tong = lieu * lan;
+
+            // Reset tất cả màu
+            row.classList.remove("border-warning", "border-danger", "border-success");
+
+            // Nếu chưa nhập đủ dữ liệu thì không check
+            if (!lieu || !lan) return;
+
+            // ========== CHECK TỔNG LIỀU/NGÀY ==========
+            // 1. Vượt tổng tối đa/ngày -> ĐỎ
+            if (t.tongLieuToiDaNgay && tong > t.tongLieuToiDaNgay) {
+                row.classList.add("border-danger");
+                return;
+            }
+
+            // 2. Vượt tổng khuyến nghị/ngày -> VÀNG
+            if (t.tongLieuKhuyenNghiNgay && tong > t.tongLieuKhuyenNghiNgay) {
+                row.classList.add("border-warning");
+                return;
+            }
+
+            // ========== CHECK LIỀU MỖI LẦN ==========
+            // 3. Vượt liều tối đa mỗi lần -> ĐỎ
+            if (t.lieuToiDa && lieu > t.lieuToiDa) {
+                row.classList.add("border-danger");
+                return;
+            }
+
+            // 4. Vượt liều khuyến nghị mỗi lần -> VÀNG
+            if (t.lieuKhuyenNghi && lieu > t.lieuKhuyenNghi) {
+                row.classList.add("border-warning");
+                return;
+            }
+
+            // 5. Dưới liều tối thiểu -> ĐỎ
+            if (t.lieuToiThieu && lieu < t.lieuToiThieu) {
+                row.classList.add("border-danger");
+                return;
+            }
+
+            // ========== CHECK TẦN SUẤT ==========
+            // 6. Vượt tần suất tối đa/ngày -> ĐỎ
+            if (t.tanSuatToiDa && lan > t.tanSuatToiDa) {
+                row.classList.add("border-danger");
+                return;
+            }
+
+            // 7. Tất cả OK -> XANH
+            row.classList.add("border-success");
+        }
+
+        // ========================================
+        // THÊM DÒNG THUỐC MỚI
+        // ========================================
+        function themDong() {
+            const container = document.getElementById("dsThuoc");
+            const template = container.querySelector(".thuoc-row");
+            const clone = template.cloneNode(true);
+
+            // Reset tất cả input và select
+            clone.querySelectorAll("input").forEach(x => {
+                x.value = "";
+                delete x.dataset.bound;
+            });
+            clone.querySelectorAll("select").forEach(x => x.value = "");
+            clone.querySelector(".thuoc-info").innerHTML = `
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>Chọn thuốc để xem chi tiết
+                    </small>`;
+
+            // Reset màu border
+            clone.classList.remove("border-warning", "border-danger", "border-success");
+
+            container.appendChild(clone);
+        }
+
+        // ========================================
+        // XÓA DÒNG THUỐC
+        // ========================================
+        function xoaDong(btn) {
+            const rows = document.querySelectorAll(".thuoc-row");
+            if (rows.length <= 1) {
+                alert("Phải có ít nhất một thuốc.");
+                return;
+            }
+            btn.closest(".thuoc-row").remove();
+        }
+
+        // ========================================
+        // LOAD BỆNH NHÂN
+        // ========================================
+        function loadBenhNhan(id) {
+            if (!id) return;
+            window.location.href = '/DanhGia/Create?maBenhNhan=' + id;
+        }
+
+        // ========================================
+        // VALIDATE FORM TRƯỚC KHI SUBMIT
+        // ========================================
+        document.getElementById("frmDanhGia").addEventListener("submit", function (e) {
+            let count = 0;
+            document.querySelectorAll('select[name="maThuocs"]').forEach(x => {
+                if (x.value) count++;
+            });
+            if (count === 0) {
+                e.preventDefault();
+                alert("Vui lòng chọn ít nhất một thuốc.");
+            }
+        });
+
+        // ========================================
+        // KHỞI TẠO BAN ĐẦU
+        // ========================================
+        document.addEventListener("DOMContentLoaded", function () {
+            const firstSelect = document.querySelector(".thuoc-select");
+            if (firstSelect && firstSelect.value) {
+                hienThiThongTinThuoc(firstSelect);
+            }
+        });
+    </script>
 }

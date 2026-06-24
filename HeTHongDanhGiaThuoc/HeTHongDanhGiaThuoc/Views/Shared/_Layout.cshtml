@@ -57,6 +57,11 @@
                                     <li><a class="dropdown-item" asp-controller="Admin" asp-action="TuongTacThuoc">
                                         <i class="fas fa-exclamation-triangle me-2"></i>Tương tác thuốc
                                     </a></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="BenhNen">
+                                            <i class="fas fa-heartbeat me-2"></i>Bệnh nền
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         }
@@ -108,5 +113,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

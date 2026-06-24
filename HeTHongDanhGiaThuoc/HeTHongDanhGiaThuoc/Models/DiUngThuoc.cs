@@ -8,20 +8,23 @@ namespace HeTHongDanhGiaThuoc.Models
         [Key]
         public int MaDiUng { get; set; }
 
+        [Required]
         [Display(Name = "Bệnh nhân")]
-        public int? MaBenhNhan { get; set; }
+        public int MaBenhNhan { get; set; } //Khóa ngoại
 
+        [Required]
         [Display(Name = "Hoạt chất")]
-        public int? MaHoatChat { get; set; }
+        public int MaHoatChat { get; set; } //Khóa ngoại
 
         [MaxLength(50)]
         [Display(Name = "Mức độ dị ứng")]
         public string? MucDoDiUng { get; set; }
 
-        [ForeignKey("MaBenhNhan")]
+        //Truy vấn khóa ngoại
+        [ForeignKey(nameof(MaBenhNhan))]
         public HoSoBenhNhan? HoSoBenhNhan { get; set; }
 
-        [ForeignKey("MaHoatChat")]
+        [ForeignKey(nameof(MaHoatChat))]
         public HoatChat? HoatChat { get; set; }
     }
 }

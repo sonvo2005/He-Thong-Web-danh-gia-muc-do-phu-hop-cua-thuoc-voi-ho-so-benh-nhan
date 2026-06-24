@@ -8,11 +8,13 @@ namespace HeTHongDanhGiaThuoc.Models
         [Key]
         public int MaTuongTac { get; set; }
 
+        [Required]
         [Display(Name = "Thuốc A")]
-        public int MaThuoc_A { get; set; }
+        public int MaThuocA{ get; set; }
 
+        [Required]
         [Display(Name = "Thuốc B")]
-        public int MaThuoc_B { get; set; }
+        public int MaThuocB { get; set; }
 
         [MaxLength(50)]
         [Display(Name = "Mức độ nghiêm trọng")]
@@ -21,10 +23,10 @@ namespace HeTHongDanhGiaThuoc.Models
         [Display(Name = "Mô tả tương tác")]
         public string? MoTaTuongTac { get; set; }
 
-        [ForeignKey("MaThuoc_A")]
+        [ForeignKey("MaThuocA")]
         public Thuoc? ThuocA { get; set; }
 
-        [ForeignKey("MaThuoc_B")]
+        [ForeignKey("MaThuocB")]
         public Thuoc? ThuocB { get; set; }
     }
 }

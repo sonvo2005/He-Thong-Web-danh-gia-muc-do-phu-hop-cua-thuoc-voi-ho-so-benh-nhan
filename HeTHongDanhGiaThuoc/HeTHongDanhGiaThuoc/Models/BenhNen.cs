@@ -1,25 +1,25 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
+using HeTHongDanhGiaThuoc.Models;
 namespace HeTHongDanhGiaThuoc.Models
 {
     public class BenhNen
     {
         [Key]
-        public int MaBenhNen { get; set; }
+        public int MaBenhNen { get; set; }//Khóa chính database
 
-        [Display(Name = "Bệnh nhân")]
-        public int? MaBenhNhan { get; set; }
-
-        [Required, MaxLength(150)]
+        [Required]
+        [MaxLength(150)]
         [Display(Name = "Tên bệnh nền")]
         public string TenBenhNen { get; set; } = string.Empty;
 
-        [Display(Name = "Ngày chẩn đoán")]
-        [DataType(DataType.Date)]
-        public DateTime? NgayChanDoan { get; set; }
+        [MaxLength(500)]
+        [Display(Name = "Mô tả")]
+        public string? MoTa { get; set; }
 
-        [ForeignKey("MaBenhNhan")]
-        public HoSoBenhNhan? HoSoBenhNhan { get; set; }
+//Khóa ngoại
+        public ICollection<BenhNhanBenhNen> BenhNhanBenhNens { get; set; } = new List<BenhNhanBenhNen>();
+
+        public ICollection<ChongChiDinh> ChongChiDinhs { get; set; }  = new List<ChongChiDinh>();
+
     }
 }

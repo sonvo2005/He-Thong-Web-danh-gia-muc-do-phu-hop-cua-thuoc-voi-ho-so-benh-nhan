@@ -9,14 +9,22 @@ namespace HeTHongDanhGiaThuoc.Data
 
         public DbSet<VaiTro> VaiTros { get; set; }
         public DbSet<NguoiDung> NguoiDungs { get; set; }
+
         public DbSet<HoSoBenhNhan> HoSoBenhNhans { get; set; }
+
         public DbSet<BenhNen> BenhNens { get; set; }
+        public DbSet<BenhNhanBenhNen> BenhNhanBenhNens { get; set; }
+
         public DbSet<HoatChat> HoatChats { get; set; }
         public DbSet<DiUngThuoc> DiUngThuocs { get; set; }
+
         public DbSet<Thuoc> Thuocs { get; set; }
         public DbSet<ThuocHoatChat> ThuocHoatChats { get; set; }
-        public DbSet<TuongTacThuoc> TuongTacThuocs { get; set; }
+        public DbSet<ThuocDangSuDung> ThuocDangSuDungs { get; set; }
+
         public DbSet<ChongChiDinh> ChongChiDinhs { get; set; }
+        public DbSet<TuongTacThuoc> TuongTacThuocs { get; set; }
+
         public DbSet<DanhGia> DanhGias { get; set; }
         public DbSet<ChiTietDanhGia> ChiTietDanhGias { get; set; }
 
@@ -24,142 +32,223 @@ namespace HeTHongDanhGiaThuoc.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // VaiTro - unique TenVaiTro
+            // ======================
+            // UNIQUE INDEX
+            // ======================
+
             modelBuilder.Entity<VaiTro>()
-                .HasIndex(v => v.TenVaiTro).IsUnique();
+                .HasIndex(x => x.TenVaiTro)
+                .IsUnique();
 
-            // NguoiDung - unique TenDangNhap
             modelBuilder.Entity<NguoiDung>()
-                .HasIndex(n => n.TenDangNhap).IsUnique();
-            modelBuilder.Entity<NguoiDung>()
-                .HasOne(n => n.VaiTro)
-                .WithMany(v => v.NguoiDungs)
-                .HasForeignKey(n => n.MaVaiTro)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasIndex(x => x.TenDangNhap)
+                .IsUnique();
 
-            // HoSoBenhNhan - unique MaDinhDanhBenhNhan
             modelBuilder.Entity<HoSoBenhNhan>()
-                .HasIndex(h => h.MaDinhDanhBenhNhan).IsUnique();
-            modelBuilder.Entity<HoSoBenhNhan>()
-                .HasOne(h => h.NguoiTao)
-                .WithMany(n => n.HoSoBenhNhans)
-                .HasForeignKey(h => h.MaNguoiTao)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasIndex(x => x.MaDinhDanhBenhNhan)
+                .IsUnique();
 
-            // BenhNen
-            modelBuilder.Entity<BenhNen>()
-                .HasOne(b => b.HoSoBenhNhan)
-                .WithMany(h => h.BenhNens)
-                .HasForeignKey(b => b.MaBenhNhan)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // DiUngThuoc
-            modelBuilder.Entity<DiUngThuoc>()
-                .HasOne(d => d.HoSoBenhNhan)
-                .WithMany(h => h.DiUngThuocs)
-                .HasForeignKey(d => d.MaBenhNhan)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<DiUngThuoc>()
-                .HasOne(d => d.HoatChat)
-                .WithMany(h => h.DiUngThuocs)
-                .HasForeignKey(d => d.MaHoatChat)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // HoatChat - unique TenHoatChat
             modelBuilder.Entity<HoatChat>()
-                .HasIndex(h => h.TenHoatChat).IsUnique();
+                .HasIndex(x => x.TenHoatChat)
+                .IsUnique();
 
-            // ThuocHoatChat
-            modelBuilder.Entity<ThuocHoatChat>()
-                .HasOne(t => t.Thuoc)
-                .WithMany(th => th.ThuocHoatChats)
-                .HasForeignKey(t => t.MaThuoc)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<ThuocHoatChat>()
-                .HasOne(t => t.HoatChat)
-                .WithMany(h => h.ThuocHoatChats)
-                .HasForeignKey(t => t.MaHoatChat)
-                .OnDelete(DeleteBehavior.Cascade);
+            // ======================
+            // NGUOIDUNG - VAITRO
+            // ======================
 
-            // TuongTacThuoc - two FK to Thuoc
-            modelBuilder.Entity<TuongTacThuoc>()
-                .HasOne(t => t.ThuocA)
-                .WithMany(th => th.TuongTacA)
-                .HasForeignKey(t => t.MaThuoc_A)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TuongTacThuoc>()
-                .HasOne(t => t.ThuocB)
-                .WithMany(th => th.TuongTacB)
-                .HasForeignKey(t => t.MaThuoc_B)
+            modelBuilder.Entity<NguoiDung>()
+                .HasOne(x => x.VaiTro)
+                .WithMany(v => v.NguoiDungs)
+                .HasForeignKey(x => x.MaVaiTro)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // ChongChiDinh
-            modelBuilder.Entity<ChongChiDinh>()
-                .HasOne(c => c.Thuoc)
-                .WithMany(t => t.ChongChiDinhs)
-                .HasForeignKey(c => c.MaThuoc)
-                .OnDelete(DeleteBehavior.Cascade);
+            // ======================
+            // HOSOBENHNHAN - NGUOITAO
+            // ======================
 
-            // DanhGia
-            modelBuilder.Entity<DanhGia>()
-                .HasOne(d => d.HoSoBenhNhan)
-                .WithMany(h => h.DanhGias)
-                .HasForeignKey(d => d.MaBenhNhan)
-                .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<DanhGia>()
-                .HasOne(d => d.NguoiDanhGia)
-                .WithMany(n => n.DanhGias)
-                .HasForeignKey(d => d.MaNguoiDanhGia)
+            modelBuilder.Entity<HoSoBenhNhan>()
+                .HasOne(x => x.NguoiTao)
+                .WithMany(n => n.HoSoBenhNhans)
+                .HasForeignKey(x => x.MaNguoiTao)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // ChiTietDanhGia
-            modelBuilder.Entity<ChiTietDanhGia>()
-                .HasOne(c => c.DanhGia)
-                .WithMany(d => d.ChiTietDanhGias)
-                .HasForeignKey(c => c.MaDanhGia)
+            // ======================
+            // BENHNHANBENHNEN
+            // ======================
+
+            modelBuilder.Entity<BenhNhanBenhNen>()
+                .HasOne(x => x.HoSoBenhNhan)
+                .WithMany(h => h.BenhNhanBenhNens)
+                .HasForeignKey(x => x.MaBenhNhan)
                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<ChiTietDanhGia>()
-                .HasOne(c => c.Thuoc)
-                .WithMany(t => t.ChiTietDanhGias)
-                .HasForeignKey(c => c.MaThuoc)
+
+            modelBuilder.Entity<BenhNhanBenhNen>()
+                .HasOne(x => x.BenhNen)
+                .WithMany(b => b.BenhNhanBenhNens)
+                .HasForeignKey(x => x.MaBenhNen)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ======================
+            // DI UNG THUOC
+            // ======================
+
+            modelBuilder.Entity<DiUngThuoc>()
+                .HasOne(x => x.HoSoBenhNhan)
+                .WithMany(h => h.DiUngThuocs)
+                .HasForeignKey(x => x.MaBenhNhan)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DiUngThuoc>()
+                .HasOne(x => x.HoatChat)
+                .WithMany(h => h.DiUngThuocs)
+                .HasForeignKey(x => x.MaHoatChat)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Table mapping (match SQL naming)
+            // ======================
+            // THUOC - HOATCHAT
+            // ======================
+
+            modelBuilder.Entity<ThuocHoatChat>()
+                .HasOne(x => x.Thuoc)
+                .WithMany(t => t.ThuocHoatChats)
+                .HasForeignKey(x => x.MaThuoc)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ThuocHoatChat>()
+                .HasOne(x => x.HoatChat)
+                .WithMany(h => h.ThuocHoatChats)
+                .HasForeignKey(x => x.MaHoatChat)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ======================
+            // THUOC DANG SU DUNG
+            // ======================
+
+            modelBuilder.Entity<ThuocDangSuDung>()
+                .HasOne(x => x.HoSoBenhNhan)
+                .WithMany(h => h.ThuocDangSuDungs)
+                .HasForeignKey(x => x.MaBenhNhan)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ThuocDangSuDung>()
+                .HasOne(x => x.Thuoc)
+                .WithMany()
+                .HasForeignKey(x => x.MaThuoc)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ======================
+            // CHONG CHI DINH
+            // ======================
+
+            modelBuilder.Entity<ChongChiDinh>()
+                .HasOne(x => x.Thuoc)
+                .WithMany(t => t.ChongChiDinhs)
+                .HasForeignKey(x => x.MaThuoc)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ChongChiDinh>()
+                .HasOne(x => x.BenhNen)
+                .WithMany(b => b.ChongChiDinhs)
+                .HasForeignKey(x => x.MaBenhNen)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ======================
+            // TUONG TAC THUOC
+            // ======================
+
+            modelBuilder.Entity<TuongTacThuoc>()
+                .HasOne(x => x.ThuocA)
+                .WithMany(t => t.TuongTacA)
+                .HasForeignKey(x => x.MaThuocA)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TuongTacThuoc>()
+                .HasOne(x => x.ThuocB)
+                .WithMany(t => t.TuongTacB)
+                .HasForeignKey(x => x.MaThuocB)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ======================
+            // DANH GIA
+            // ======================
+
+            modelBuilder.Entity<DanhGia>()
+                .HasOne(x => x.HoSoBenhNhan)
+                .WithMany(h => h.DanhGias)
+                .HasForeignKey(x => x.MaBenhNhan)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<DanhGia>()
+                .HasOne(x => x.NguoiDanhGia)
+                .WithMany(n => n.DanhGias)
+                .HasForeignKey(x => x.MaNguoiDanhGia)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ======================
+            // CHI TIET DANH GIA
+            // ======================
+
+            modelBuilder.Entity<ChiTietDanhGia>()
+                .HasOne(x => x.DanhGia)
+                .WithMany(d => d.ChiTietDanhGias)
+                .HasForeignKey(x => x.MaDanhGia)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ChiTietDanhGia>()
+                .HasOne(x => x.Thuoc)
+                .WithMany(t => t.ChiTietDanhGias)
+                .HasForeignKey(x => x.MaThuoc)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ======================
+            // TABLE NAME
+            // ======================
+
             modelBuilder.Entity<VaiTro>().ToTable("VaiTro");
             modelBuilder.Entity<NguoiDung>().ToTable("NguoiDung");
+
             modelBuilder.Entity<HoSoBenhNhan>().ToTable("HoSoBenhNhan");
+
             modelBuilder.Entity<BenhNen>().ToTable("BenhNen");
+            modelBuilder.Entity<BenhNhanBenhNen>().ToTable("BenhNhanBenhNen");
+
             modelBuilder.Entity<HoatChat>().ToTable("HoatChat");
             modelBuilder.Entity<DiUngThuoc>().ToTable("DiUngThuoc");
+
             modelBuilder.Entity<Thuoc>().ToTable("Thuoc");
-            modelBuilder.Entity<ThuocHoatChat>().ToTable("Thuoc_HoatChat");
-            modelBuilder.Entity<TuongTacThuoc>().ToTable("TuongTacThuoc");
+            modelBuilder.Entity<ThuocHoatChat>().ToTable("ThuocHoatChat");
+            modelBuilder.Entity<ThuocDangSuDung>().ToTable("ThuocDangSuDung");
+
             modelBuilder.Entity<ChongChiDinh>().ToTable("ChongChiDinh");
+            modelBuilder.Entity<TuongTacThuoc>().ToTable("TuongTacThuoc");
+      
+
             modelBuilder.Entity<DanhGia>().ToTable("DanhGia");
             modelBuilder.Entity<ChiTietDanhGia>().ToTable("ChiTietDanhGia");
 
-            // Seed data
-            modelBuilder.Entity<VaiTro>().HasData(
-                new VaiTro { MaVaiTro = 1, TenVaiTro = "Admin" },
-                new VaiTro { MaVaiTro = 2, TenVaiTro = "Bác sĩ" },
-                new VaiTro { MaVaiTro = 3, TenVaiTro = "Dược sĩ" },
-                new VaiTro { MaVaiTro = 4, TenVaiTro = "Y tá" }
-            );
+            modelBuilder.Entity<BenhNhanBenhNen>()
+    .HasIndex(x => new
+    {
+        x.MaBenhNhan,
+        x.MaBenhNen
+    })
+    .IsUnique();
 
-            // Seed admin user (password: Admin@123)
-            modelBuilder.Entity<NguoiDung>().HasData(
-                new NguoiDung
-                {
-                    MaNguoiDung = 1,
-                    TenDangNhap = "admin",
-                    MatKhauMaHoa = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
-                    HoTen = "Quản trị viên",
-                    Email = "admin@hethong.com",
-                    MaVaiTro = 1,
-                    TrangThaiHoatDong = true,
-                    NgayTao = new DateTime(2024, 1, 1)
-                }
-            );
+            modelBuilder.Entity<ThuocHoatChat>()
+            .HasIndex(x => new
+            {
+                x.MaThuoc,
+                x.MaHoatChat
+            })
+            .IsUnique();
+
+            modelBuilder.Entity<ThuocDangSuDung>()
+    .HasIndex(x => new
+    {
+        x.MaBenhNhan,
+        x.MaThuoc
+    })
+    .IsUnique();
         }
     }
 }

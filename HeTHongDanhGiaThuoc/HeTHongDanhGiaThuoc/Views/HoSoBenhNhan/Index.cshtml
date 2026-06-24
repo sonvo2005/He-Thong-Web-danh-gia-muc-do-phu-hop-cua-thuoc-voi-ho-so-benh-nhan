@@ -57,16 +57,37 @@
                         <td class="text-muted">@item.NgayTiepNhan.ToString("dd/MM/yyyy")</td>
                         <td class="text-muted">@item.NguoiTao?.HoTen</td>
                         <td class="text-center">
-                            <a asp-action="Details" asp-route-id="@item.MaBenhNhan" class="btn btn-sm btn-outline-info" title="Chi tiết">
+
+                            <!-- XEM -->
+                            <a asp-action="Details" asp-route-id="@item.MaBenhNhan" class="btn btn-sm btn-outline-info"
+                               title="Chi tiết">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a asp-action="Edit" asp-route-id="@item.MaBenhNhan" class="btn btn-sm btn-outline-warning" title="Sửa">
+
+                            <!-- SỬA -->
+                            <a asp-action="Edit" asp-route-id="@item.MaBenhNhan" class="btn btn-sm btn-outline-warning"
+                               title="Sửa">
                                 <i class="fas fa-edit"></i>
                             </a>
+
+                            <!-- ĐÁNH GIÁ -->
                             <a asp-controller="DanhGia" asp-action="Create" asp-route-maBenhNhan="@item.MaBenhNhan"
                                class="btn btn-sm btn-outline-primary" title="Đánh giá thuốc">
                                 <i class="fas fa-clipboard-check"></i>
                             </a>
+
+                            <!-- ================= DELETE ================= -->
+                            <form asp-action="Delete" method="post" asp-route-id="@item.MaBenhNhan" style="display:inline"
+                                  onsubmit="return confirm('Ngài chắc chắn muốn xóa hồ sơ này?');">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+
+                            </form>
+
                         </td>
                     </tr>
                 }
